@@ -1,0 +1,6 @@
+
+@Entity()
+
+export class UserEntity{
+    
+}
