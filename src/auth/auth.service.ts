@@ -7,4 +7,7 @@ import { Repository } from 'typeorm';
 export class AuthService {
     constructor(@InjectRepository(User) private readonly authRepo:Repository<User>){}
 
+    async signUp(payload){
+
+    }
 }
