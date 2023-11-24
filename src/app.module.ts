@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 
@@ -8,7 +6,8 @@ import { ConfigModule } from '@nestjs/config';
   imports:[ConfigModule.forRoot({
     isGlobal:true
   })],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
+  
