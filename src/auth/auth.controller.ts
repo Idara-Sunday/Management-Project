@@ -15,7 +15,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('signin')
-  async signin(@Body() payload:SignInDto,@Res() res:Response){
+  async signin(@Body() payload:SignInDto,@Res({passthrough:true}) res:Response){
     const token = await this.authService.signIn(payload);
     res.cookie('Authenticated',token,{
       httpOnly:true,
@@ -25,7 +25,7 @@ export class AuthController {
       success:true,
       userToken:token
     })
-    
+
   }
 
   @UseGuards(AuthGuard)
