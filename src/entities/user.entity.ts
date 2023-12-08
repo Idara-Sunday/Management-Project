@@ -10,8 +10,8 @@ export class User extends Base{
     @Column()
     lastName:string;
 
-    @Column()
-    middleName?: string;
+    @Column({nullable:true})
+    middleName: string;
 
     @Column({
         unique:true

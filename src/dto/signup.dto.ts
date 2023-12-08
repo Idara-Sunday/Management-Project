@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsString, IsOptional, MinLength, MaxLength, Matches } from "class-validator";
-import { Roles } from "src/enum/role";
 
 export class signupDTO{
     @IsNotEmpty()
@@ -13,20 +12,20 @@ export class signupDTO{
     lastName:string;
 
     @IsString()
-    @MinLength(3)
+    // @MinLength(3)
     @IsOptional()
     middleName?: string;
 
-    @IsNotEmpty()
+    @IsNotEmpty()  
     @IsString()
     email:string;
 
     @IsNotEmpty()
     @IsString()
-    @MinLength(6,{message:'sorry you must puty in 6 characters'})
+    @MinLength(8,{message:'sorry you must put in at least 8 characters'})
     @MaxLength(16,{message:'Password must not be more than 16 characters'})
-    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/, {message:'password must contain at least one uppercase,one number and one special key'}) 
-    password:string; 
-
-
+    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/, {message:'password must contain at least one uppercase,one number and one special character'})  
+    password:string;    
+      
+   
 }

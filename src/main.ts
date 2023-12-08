@@ -11,7 +11,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist:true
   }))
-  await app.listen(port || 3000, ()=>console.log(`server is listening on port ${port}`)
+  await app.listen(port, ()=>console.log(`server is listening on port ${port}`)
   ); 
 } 
 bootstrap();
+ 
