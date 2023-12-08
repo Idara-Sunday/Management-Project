@@ -17,7 +17,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // Signing  up as a user
+  // IMPLEMENTING SIGN UP
   async signUp(payload: signupDTO) {
     // Destructuring payload
     const { email, password, ...rest } = payload;
@@ -39,23 +39,25 @@ export class AuthService {
     return savedUser;
   }
 
+  // IMPLEMENTING SIGN-IN
+
   async signIn(payload: SignInDto) {
     const { email, password } = payload;
 
     const registeredUser = await this.authRepo.findOne({ where: { email } });
 
     if (!registeredUser) {
-      throw new HttpException('No user with this email found', 401);
+      throw new HttpException('invalid credentials', 401);
     }
 
     const isMatch = await bcrypt.compare(password, registeredUser.password);
     console.log(isMatch);
 
     if (!isMatch) {
-      throw new UnauthorizedException();
+      throw new HttpException('invalid credentials',401);
     }
 
-    const result = {
+    const jwtPayload = {
       sub: registeredUser.email,
       userId: registeredUser.id,
       firstname: registeredUser.firstName,
@@ -63,7 +65,7 @@ export class AuthService {
     };
 
     return {
-      access_token: await this.jwtService.signAsync(result),
+      access_token: await this.jwtService.signAsync(jwtPayload),
     };
   }
-}
+} 
