@@ -24,7 +24,7 @@ export class User extends Base{
     @Column({
         type:'enum',
         enum:Roles,
-        default:Roles.user
+        default:Roles.unknown
     })
     role:Roles
 } 
