@@ -15,12 +15,12 @@ import { ConfigService } from '@nestjs/config';
     secret:config.getOrThrow('JWT_SECRET'),
     signOptions:{
       expiresIn:config.getOrThrow('JWT_EXPIRESIN'),
-      algorithm:config.getOrThrow('JWT_ALGORITH')
-  },
-}),
+      algorithm:config.getOrThrow('JWT_ALGORITH')},}),
+
   PassportModule.register({
-    defaultStrategy:'jwt'})
-})
+    defaultStrategy:'jwt'}) 
+  })
+
 ],
   providers: [AuthService],
   controllers: [AuthController]
