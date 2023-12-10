@@ -10,6 +10,8 @@ import { signupDTO } from 'src/dto/signup.dto';
 import * as bcrypt from 'bcrypt';
 import { SignInDto } from 'src/dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
+import { access } from 'fs';
+import {Response} from 'express'
 @Injectable()
 export class AuthService {
   constructor(
@@ -67,5 +69,11 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(jwtPayload),
     };
+
   }
+
+  async signOut(res:Response):Promise<void>{
+   res.clearCookie('Authenticated')
+  }
+
 } 
