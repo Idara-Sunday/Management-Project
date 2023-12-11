@@ -74,7 +74,7 @@ export class AuthService {
       httpOnly: true,
       maxAge: 1 * 60 * 60 * 24,
     });
-    return { access_token };
+    return { acessToken:access_token };
   }
 
   // Implementing Logout functionality
