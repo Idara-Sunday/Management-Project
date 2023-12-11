@@ -16,16 +16,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('signin')
   async signin(@Body() payload:SignInDto,@Res() res:Response){
-    const token = await this.authService.signIn(payload);
-    res.cookie('Authenticated',token,{
-      httpOnly:true,
-      maxAge:1*60*60*24
-    });
-    return res.send({
-      success:true,
-      userToken:token
-    })
 
+    
+   const token =  await this.authService.signIn(payload,res);
+   return res.send({
+    success:true,
+    usertoken:token
+   })
   }
 
   @UseGuards(AuthGuard)
@@ -34,6 +31,7 @@ export class AuthController {
     return await req.user
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('logout')
   async logout(@Res() res:Response):Promise<void>{
     this.authService.signOut(res)

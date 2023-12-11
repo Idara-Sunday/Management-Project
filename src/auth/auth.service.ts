@@ -11,7 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { SignInDto } from 'src/dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
 import { access } from 'fs';
-import {Response} from 'express'
+import { Response } from 'express';
 @Injectable()
 export class AuthService {
   constructor(
@@ -21,7 +21,8 @@ export class AuthService {
 
   // IMPLEMENTING SIGN UP
   async signUp(payload: signupDTO) {
-    // Destructuring payload
+
+    // Destructuring incoming payload
     const { email, password, ...rest } = payload;
 
     const user = await this.authRepo.findOne({ where: { email } });
@@ -43,37 +44,42 @@ export class AuthService {
 
   // IMPLEMENTING SIGN-IN
 
-  async signIn(payload: SignInDto) {
+  async signIn(payload: SignInDto, res: Response) {
+    // Destructuting incoming payload
+    
     const { email, password } = payload;
 
     const registeredUser = await this.authRepo.findOne({ where: { email } });
 
     if (!registeredUser) {
-      throw new HttpException('invalid credentials', 401);
+      throw new HttpException('Invalid credentials', 401);
     }
 
     const isMatch = await bcrypt.compare(password, registeredUser.password);
     console.log(isMatch);
 
     if (!isMatch) {
-      throw new HttpException('invalid credentials',401);
+      throw new HttpException('Invalid credentials', 401);
     }
 
     const jwtPayload = {
       sub: registeredUser.email,
       userId: registeredUser.id,
-      firstname: registeredUser.firstName,
-      lastname: registeredUser.lastName,
+      
     };
 
-    return {
-      access_token: await this.jwtService.signAsync(jwtPayload),
-    };
+    const access_token = await this.jwtService.signAsync(jwtPayload);
 
+    res.cookie('Authenticated', access_token, {
+      httpOnly: true,
+      maxAge: 1 * 60 * 60 * 24,
+    });
+    return { access_token };
   }
 
-  async signOut(res:Response):Promise<void>{
-   res.clearCookie('Authenticated')
-  }
+  // Implementing Logout functionality
 
-} 
+  async signOut(res: Response): Promise<void> {
+    res.clearCookie('Authenticated');
+  }
+}
