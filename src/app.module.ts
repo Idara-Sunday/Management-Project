@@ -13,8 +13,8 @@ import { AppContoller } from './app/app.controller';
 DatabaseModule,
 AuthModule,
 ProductModule],
-  controllers: [AppContoller],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}  
    
