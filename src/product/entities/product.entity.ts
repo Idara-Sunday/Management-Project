@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/entities/user.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Product {
@@ -13,6 +14,10 @@ export class Product {
 
     @Column()
     productBrand:string;
+
+    @ManyToOne(()=>User,(user)=>user.product)
+    user:User;
+    
 
 
 }
