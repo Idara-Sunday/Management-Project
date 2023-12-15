@@ -36,6 +36,6 @@ export class AuthController {
   async logout(@Res() res:Response):Promise<void>{
     this.authService.signOut(res)
     res.send({message:'successfully logged out'})
-  }
+  } 
 }  
  

@@ -12,6 +12,7 @@ import { SignInDto } from 'src/dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
 import { access } from 'fs';
 import { Response } from 'express';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -81,5 +82,35 @@ export class AuthService {
 
   async signOut(res: Response): Promise<void> {
     res.clearCookie('Authenticated');
+  }
+
+  async findEmail(email:string){
+    const mail = await this.authRepo.findOneByOrFail({email});
+    if(!mail){
+      throw new UnauthorizedException()
+    }
+    return mail;
+  }
+
+  async user(headers:any):Promise<any>{
+    const authorizationHeader = headers.authorization;
+    if (authorizationHeader){
+      const token = authorizationHeader.replace('Bearer','').trim();
+      console.log(token);
+      
+      const secret = process.env.JWt_SECRET;
+      try{
+        const decoded = this.jwtService.verify(token);
+        let id = decoded["id"];
+        let user = await this.authRepo.findOneBy({id});
+
+        return {id,firstname:user.firstName,lastname:user.lastName,email:user.email,role:user.role};
+      } catch (error){
+        throw new UnauthorizedException('Invalid token');
+      }
+    } else {
+      throw new  UnauthorizedException('Invalid or missing Bearer token');
+    }
+
   }
 }
