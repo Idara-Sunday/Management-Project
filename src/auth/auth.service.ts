@@ -98,7 +98,7 @@ export class AuthService {
       const token = authorizationHeader.replace('Bearer','').trim();
       console.log(token);
       
-      const secret = process.env.JWt_SECRET;
+      const scret = process.env.JWt_SECRET;
       try{
         const decoded = this.jwtService.verify(token);
         let id = decoded["id"];
