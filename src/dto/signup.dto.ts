@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsOptional, MinLength, MaxLength, Matches } from "class-validator";
+import { IsNotEmpty, IsString, IsOptional, MinLength, MaxLength, Matches, IsEmail } from "class-validator";
 import { Roles } from "../enum/role";
 
 export class signupDTO{
@@ -19,6 +19,7 @@ export class signupDTO{
 
     @IsNotEmpty()  
     @IsString()
+    @IsEmail()
     email:string;
 
     @IsNotEmpty()
