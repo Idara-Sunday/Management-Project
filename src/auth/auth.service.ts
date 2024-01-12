@@ -2,17 +2,18 @@ import {
   BadRequestException,
   HttpException,
   Injectable,
+  Req,
+  Res,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
-import { signupDTO } from 'src/dto/signup.dto';
+import { signupDTO } from '../dto/signup.dto';
 import * as bcrypt from 'bcrypt';
-import { SignInDto } from 'src/dto/signin.dto';
+import { SignInDto } from '../dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
-import { access } from 'fs';
-import { Response } from 'express';
+import { Response ,Request} from 'express';
 
 @Injectable()
 export class AuthService {
@@ -54,22 +55,25 @@ export class AuthService {
 
   // IMPLEMENTING SIGN-IN
 
-  async signIn(payload: SignInDto, res: Response) {
+  async signIn(payload: SignInDto, @Req() @Res() res: Response,@Req() req:Request) {
     // Destructuting incoming payload
 
     const { email, password } = payload;
 
-    const registeredUser = await this.authRepo.findOne({ where: { email:email } });
+    // const registeredUser = await this.authRepo.findOne({ where: { email:email } });
+    const registeredUser = await this.authRepo.createQueryBuilder("user")
+    .addSelect("user.password")
+    .where("user.email = :email", {email:payload.email}).getOne()
 
     if (!registeredUser) {
-      throw new HttpException('Invalid credentials', 401);
+      throw new HttpException('No email found', 400);
     }
 
     const isMatch = await bcrypt.compare(password, registeredUser.password);
     console.log(isMatch);
 
     if (!isMatch) {
-      throw new HttpException('Invalid credentials', 401);
+      throw new HttpException('Wrong password', 400);
     }
 
     const jwtPayload = {
@@ -79,17 +83,26 @@ export class AuthService {
 
     const access_token = await this.jwtService.signAsync(jwtPayload);
 
-    res.cookie('Authenticated', access_token, {
+    res.cookie('isAuthenticated', access_token, {
       httpOnly: true,
-      maxAge: 1 * 60 * 60 * 24,
+      maxAge: 1 * 60 * 60 * 1000,
     });
-    return { acessToken: access_token };
+    // return { acessToken: access_token };
+    return res.send({
+    success:true,
+    userToken:access_token
+    })
   }
 
   // Implementing Logout functionality
 
-  async signOut(res: Response): Promise<void> {
-    res.clearCookie('Authenticated');
+  async signOut(@Req() req:Request ,@Res() res: Response){
+   const clearCookie = res.clearCookie('isAuthenticated');
+   const response = res.send('user successfully logout')
+   return {
+    clearCookie,
+    response
+   }
   }
 
   async findEmail(email: string) {

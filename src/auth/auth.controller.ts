@@ -1,9 +1,9 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, Res, UseGuards } from '@nestjs/common';
-import { signupDTO } from 'src/dto/signup.dto';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { signupDTO } from '../dto/signup.dto';
 import { AuthService } from './auth.service';
-import { SignInDto } from 'src/dto/signin.dto';
+import { SignInDto } from '../dto/signin.dto';
 import { AuthGuard } from './auth.guard';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -15,27 +15,24 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('signin')
-  async signin(@Body() payload:SignInDto,@Res() res:Response){
+  async signin(@Body() payload:SignInDto,@Res() res:Response,@Req() req:Request){
 
-    
-   const token =  await this.authService.signIn(payload,res);
-   return res.send({
-    success:true,
-    usertoken:token
-   })
+   const token =  await this.authService.signIn(payload,res,req);
+  
   }
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  async getProfile(@Request() req){
+  async getProfile(@Req() req:Request){
     return await req.user
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('logout')
-  async logout(@Res() res:Response):Promise<void>{
-    this.authService.signOut(res)
-    res.send({message:'successfully logged out'})
+  async logout( @Req() req:Request ,@Res() res:Response){
+    // this.authService.signOut(res)
+    // res.send({message:'successfully logged out'})
+    return await this.authService.signOut(req,res)
   } 
 }  
  
