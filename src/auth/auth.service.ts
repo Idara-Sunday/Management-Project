@@ -47,7 +47,7 @@ export class AuthService {
       return user;
     } catch (err) {
       if (err.code === '22P02') {
-        throw new BadRequestException('admin role should be lowercase');
+        throw new BadRequestException('this role should be lowercase');
       }
       return err;
     }
