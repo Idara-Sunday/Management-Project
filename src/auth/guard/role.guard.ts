@@ -16,7 +16,7 @@ export class RolesGuard implements CanActivate{
             const headers:Headers = request.headers;
             let user = await this.authService.user(headers);
 
-            if(!roles.includes((await  user.role))){
+            if(!roles.includes(( await user).role)){
                 throw new ForbiddenRoleException(roles.join(' or '));
             }
             return true;

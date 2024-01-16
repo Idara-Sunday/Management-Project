@@ -17,7 +17,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('signin')
-  async signin(@Body() payload:SignInDto,@Res() res:Response,@Req() req:Request){
+  async signin(@Body() payload:SignInDto,@Req() req:Request, @Res() res:Response){
 
    const token =  await this.authService.signIn(payload,res,req);
   
