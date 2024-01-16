@@ -55,7 +55,7 @@ export class AuthService {
 
   // IMPLEMENTING SIGN-IN
 
-  async signIn(payload: SignInDto, @Req() @Res() res: Response,@Req() req:Request) {
+  async signIn(payload: SignInDto, @Res() res: Response,@Req() req:Request) {
     // Destructuting incoming payload
 
     const { email, password } = payload;
