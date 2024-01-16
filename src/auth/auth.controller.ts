@@ -2,8 +2,10 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards 
 import { signupDTO } from '../dto/signup.dto';
 import { AuthService } from './auth.service';
 import { SignInDto } from '../dto/signin.dto';
-import { AuthGuard } from './auth.guard';
 import { Request, Response } from 'express';
+import { RolesGuard } from './guard/role.guard';
+import { Roles } from './guard/roles';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -21,7 +23,7 @@ export class AuthController {
   
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard())
   @Get('profile')
   async getProfile(@Req() req:Request){
     return await req.user
@@ -34,5 +36,12 @@ export class AuthController {
     // res.send({message:'successfully logged out'})
     return await this.authService.signOut(req,res)
   } 
+
+  @Get('getusers')
+  @UseGuards(AuthGuard(),RolesGuard)
+  @Roles('admin','user')
+  async findAllUsers(){
+    return await this.authService.findUsers()
+  }
 }  
  

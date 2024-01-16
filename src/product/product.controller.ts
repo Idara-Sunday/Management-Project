@@ -3,8 +3,8 @@ import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/guard/role.guard';
-import { Roles } from 'src/guard/roles';
+import { RolesGuard } from 'src/auth/guard/role.guard';
+import { Roles } from 'src/auth/guard/roles';
 
 @Controller('product')
 export class ProductController {

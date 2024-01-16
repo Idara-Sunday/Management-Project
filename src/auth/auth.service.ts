@@ -105,6 +105,11 @@ export class AuthService {
    }
   }
 
+
+  async findUsers(){
+    return await this.authRepo.find()
+  }
+
   async findEmail(email: string) {
     const mail = await this.authRepo.findOneByOrFail({ email });
     if (!mail) {
@@ -122,7 +127,7 @@ export class AuthService {
       const scret = process.env.JWt_SECRET;
       try {
         const decoded = this.jwtService.verify(token);
-        let id = decoded['id'];
+        let id = decoded['id']; 
         let user = await this.authRepo.findOneBy({ id });
 
         return {

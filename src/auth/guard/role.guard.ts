@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { AuthService } from "../auth/auth.service";
-import { ForbiddenRoleException } from "src/exception/role.exception";
+import { AuthService } from "../auth.service";
+import { ForbiddenRoleException } from "src/auth/exception/role.exception";
 
 @Injectable()
 export class RolesGuard implements CanActivate{
@@ -11,12 +11,12 @@ export class RolesGuard implements CanActivate{
         const roles = this.reflector.get<string[]>('roles',context.getHandler());
 
 
-        const request = context.switchToHttp().getRequest();
-        if(request?.user){
+        const request = context.switchToHttp().getRequest(); 
+        if(request?.user){   
             const headers:Headers = request.headers;
             let user = await this.authService.user(headers);
 
-            if(!roles.includes(( user.role))){
+            if(!roles.includes((await  user.role))){
                 throw new ForbiddenRoleException(roles.join(' or '));
             }
             return true;

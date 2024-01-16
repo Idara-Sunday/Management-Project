@@ -11,12 +11,12 @@ export class JwtStrategy extends PassportStrategy(Strategy){
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration:false,
             secretOrKey: process.env.JWT_SECRET,
-        });
-    }     
+        }); 
+    }      
 
    
     async validate(payload: {email}):Promise<User>{
-        try{
+        try{ 
 
             const {email} = payload;
             const user =await this.authService.findEmail(email);
@@ -27,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy){
         } catch(error) {
 
             console.error('Error validating token:', error);
-            throw new UnauthorizedException('Invalid token')
+            throw new UnauthorizedException('Invalid token') 
         }
        
     }
