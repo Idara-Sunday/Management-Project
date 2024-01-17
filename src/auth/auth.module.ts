@@ -4,7 +4,7 @@ import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '../strategy/jwt.strategy';
 import { RolesGuard } from './guard/role.guard';
@@ -14,6 +14,7 @@ import { RolesGuard } from './guard/role.guard';
 
   JwtModule.registerAsync({
     inject:[ConfigService],
+    imports:[ConfigModule],
     useFactory:async (config:ConfigService) =>({
     secret:config.getOrThrow<string>('JWT_SECRET'),
     signOptions:{

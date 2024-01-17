@@ -15,7 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
               synchronize: configService.getOrThrow('DB_SYNCHRONIZE'),
             }),
             inject: [ConfigService], 
-          }),     
+          }),      
     ]   
 })
 export class DatabaseModule {}
