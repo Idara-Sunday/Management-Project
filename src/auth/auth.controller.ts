@@ -9,7 +9,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService:AuthService){} 
+    constructor(private authService:AuthService){} 
   @Post('signup')
   async signUp(@Body() payload: signupDTO) {
     return await this.authService.signUp(payload);
@@ -20,13 +20,13 @@ export class AuthController {
   async signin(@Body() payload:SignInDto,@Req() req:Request, @Res() res:Response){
 
    const token =  await this.authService.signIn(payload,res,req);
-  
+   return token
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard() )
   @Get('profile')
   async getProfile(@Req() req:Request){
-    return await req.user
+    return  req.user
   }
 
   @HttpCode(HttpStatus.OK)

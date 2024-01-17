@@ -18,7 +18,7 @@ import { Response ,Request} from 'express';
 @Injectable()
 export class AuthService {
   constructor( 
-    @InjectRepository(User) private readonly authRepo: Repository<User>,
+    @InjectRepository(User) private  authRepo: Repository<User>,
     private jwtService: JwtService, 
   ) {} 
 
@@ -122,22 +122,22 @@ export class AuthService {
   async user(headers: any): Promise<any> {
     const authorizationHeader = headers.authorization;
     if (authorizationHeader) {
-      const token = authorizationHeader.replace('Bearer', '').trim();
+      const token = authorizationHeader.replace('Bearer', ' ').trim();
       console.log(token);
 
-      const scret = process.env.JWt_SECRET;
+      const secret = process.env.JWT_SECRET;
       try {
         const decoded = this.jwtService.verify(token);
         let id = decoded['id']; 
         let user = await this.authRepo.findOneBy({ id });
 
         return {
-          id,
+          id:user.id,
           firstname: user.firstName,
           lastname: user.lastName,
           email: user.email,
           role: user.role,
-        };
+        }
       } catch (error) {
         throw new UnauthorizedException('Invalid token');
       }

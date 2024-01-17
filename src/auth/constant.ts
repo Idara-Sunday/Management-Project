@@ -1,1 +1,1 @@
-export const jwtConstants = {secret:process.env.APP_SECRET}
+export const jwtConstants = {secret:process.env.JWT_SECRET}

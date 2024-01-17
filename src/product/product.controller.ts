@@ -16,8 +16,8 @@ export class ProductController {
   }
 
   @Get()
-  @UseGuards(AuthGuard(),RolesGuard)
-  @Roles('admin','unknown')
+  // @UseGuards(AuthGuard(),RolesGuard)
+  // @Roles('admin','unknown')
   async findAll() {
     return await this.productService.findAll();
   }
