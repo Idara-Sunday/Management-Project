@@ -2,6 +2,7 @@ import {
   BadRequestException,
   HttpException,
   Injectable,
+  NotFoundException,
   Req,
   Res,
   UnauthorizedException,
@@ -13,14 +14,14 @@ import { signupDTO } from '../dto/signup.dto';
 import * as bcrypt from 'bcrypt';
 import { SignInDto } from '../dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Response ,Request} from 'express';
- 
+import { Response, Request } from 'express';
+
 @Injectable()
 export class AuthService {
-  constructor( 
-    @InjectRepository(User) private  authRepo: Repository<User>,
-    private jwtService: JwtService, 
-  ) {} 
+  constructor(
+    @InjectRepository(User) private authRepo: Repository<User>,
+    private jwtService: JwtService,
+  ) {}
 
   // IMPLEMENTING SIGN UP
   async signUp(payload: signupDTO) {
@@ -34,7 +35,7 @@ export class AuthService {
 
     const hashPassword = await bcrypt.hash(password, 12);
 
-    try {    
+    try {
       const user = await this.authRepo.create({
         ...rest,
         email,
@@ -55,15 +56,17 @@ export class AuthService {
 
   // IMPLEMENTING SIGN-IN
 
-  async signIn(payload: SignInDto, @Res() res: Response,@Req() req:Request) {
+  async signIn(payload: SignInDto, @Res() res: Response, @Req() req: Request) {
     // Destructuting incoming payload
 
     const { email, password } = payload;
 
     // const registeredUser = await this.authRepo.findOne({ where: { email:email } });
-    const registeredUser = await this.authRepo.createQueryBuilder("user")
-    .addSelect("user.password")
-    .where("user.email = :email", {email:payload.email}).getOne()
+    const registeredUser = await this.authRepo
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email: payload.email })
+      .getOne();
 
     if (!registeredUser) {
       throw new HttpException('No email found', 400);
@@ -79,7 +82,7 @@ export class AuthService {
     const jwtPayload = {
       sub: registeredUser.email,
       userId: registeredUser.id,
-      role:registeredUser.role
+      role: registeredUser.role,
     };
 
     const access_token = await this.jwtService.signAsync(jwtPayload);
@@ -90,25 +93,24 @@ export class AuthService {
     });
     // return { acessToken: access_token };
     return res.send({
-    success:true,
-    userToken:access_token
-    })
+      success: true,
+      userToken: access_token,
+    });
   }
 
   // Implementing Logout functionality
 
-  async signOut(@Req() req:Request ,@Res() res: Response){
-   const clearCookie = res.clearCookie('isAuthenticated');
-   const response = res.send('user successfully logout')
-   return {
-    clearCookie,
-    response
-   }
+  async signOut(@Req() req: Request, @Res() res: Response) {
+    const clearCookie = res.clearCookie('isAuthenticated');
+    const response = res.send('user successfully logout');
+    return {
+      clearCookie,
+      response,
+    };
   }
 
-
-  async findUsers(){
-    return await this.authRepo.find()
+  async findUsers() {
+    return await this.authRepo.find();
   }
 
   async findEmail(email: string) {
@@ -128,21 +130,49 @@ export class AuthService {
       const secret = process.env.JWT_SECRET;
       try {
         const decoded = this.jwtService.verify(token);
-        let id = decoded['id']; 
+        let id = decoded['id'];
         let user = await this.authRepo.findOneBy({ id });
 
         return {
-          id:user.id,
+          id: user.id,
           firstname: user.firstName,
           lastname: user.lastName,
           email: user.email,
           role: user.role,
-        }
+        };
       } catch (error) {
         throw new UnauthorizedException('Invalid token');
       }
     } else {
       throw new UnauthorizedException('Invalid or missing Bearer token');
     }
+  }
+
+  async blockUser(id: string) {
+    const user = await this.authRepo.findOneBy({ id });
+
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+
+    user.blocked = true;
+
+    return await this.authRepo.save(user);
+  }
+
+  async unblockUser(id: string) {
+    const user = await this.authRepo.findOneBy({ id });
+
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+
+    user.blocked = false;
+
+    return await this.authRepo.save(user)
+  }
+
+  async userbyId(id:string){
+    return await this.authRepo.findOneBy({id})
   }
 }

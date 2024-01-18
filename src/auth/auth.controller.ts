@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { signupDTO } from '../dto/signup.dto';
 import { AuthService } from './auth.service';
 import { SignInDto } from '../dto/signin.dto';
@@ -6,6 +6,7 @@ import { Request, Response } from 'express';
 import { RolesGuard } from './guard/role.guard';
 import { Roles } from './guard/roles';
 import { AuthGuard } from '@nestjs/passport';
+import { BlockGuard } from './guard/block.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -43,5 +44,25 @@ export class AuthController {
   async findAllUsers(){
     return await this.authService.findUsers()
   }
+
+  @Post(':id/block')
+  async blockUser(@Param() id:string){
+
+    return await this.authService.blockUser(id);
+
+  }
+
+  @Post('id/unblock')
+  async unblockUser(@Param() id:string){
+
+    return await this.authService.unblockUser(id)
+  }
+
+  @UseGuards(BlockGuard)
+  @Get('hello')
+  helloworld(){
+    return `hello world`
+  }
+
 }  
  

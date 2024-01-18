@@ -22,6 +22,9 @@ export class User extends Base{
     @Column()
     password:string;
 
+    @Column({default:false})
+    blocked:boolean;
+
     @Column({
         type:'enum',
         enum:Roles,
