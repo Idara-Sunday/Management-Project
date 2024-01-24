@@ -58,7 +58,7 @@ export class AuthController {
     return await this.authService.unblockUser(id)
   }
 
-  @UseGuards(BlockGuard)
+  @UseGuards(AuthGuard(),BlockGuard)
   @Get('hello')
   helloworld(){
     return `hello world`

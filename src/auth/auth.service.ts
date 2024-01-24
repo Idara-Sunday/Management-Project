@@ -80,8 +80,8 @@ export class AuthService {
     }
 
     const jwtPayload = {
-      sub: registeredUser.email,
-      userId: registeredUser.id,
+      email: registeredUser.email,
+      id: registeredUser.id,
       role: registeredUser.role,
     };
 
@@ -124,17 +124,19 @@ export class AuthService {
   async user(headers: any): Promise<any> {
     const authorizationHeader = headers.authorization;
     if (authorizationHeader) {
-      const token = authorizationHeader.replace('Bearer', ' ').trim();
+      const token = authorizationHeader.replace('Bearer', '').trim();
       console.log(token);
 
       const secret = process.env.JWT_SECRET;
       try {
         const decoded = this.jwtService.verify(token);
+        // console.log(decoded)
         let id = decoded['id'];
+        // console.log(id)
         let user = await this.authRepo.findOneBy({ id });
 
         return {
-          id: user.id,
+          id:user.id,
           firstname: user.firstName,
           lastname: user.lastName,
           email: user.email,

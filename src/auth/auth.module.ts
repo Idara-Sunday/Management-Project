@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '../strategy/jwt.strategy';
 import { RolesGuard } from './guard/role.guard';
+import { BlockGuard } from './guard/block.guard';
 
 @Module({
   imports:[TypeOrmModule.forFeature([User]),
@@ -25,7 +26,7 @@ import { RolesGuard } from './guard/role.guard';
   PassportModule.register({
     defaultStrategy:'jwt'}) 
 ],
-  providers: [AuthService,JwtStrategy,RolesGuard],
+  providers: [AuthService,JwtStrategy,RolesGuard,BlockGuard],
   controllers: [AuthController],
   exports:[JwtStrategy,PassportModule,AuthService]
 })
