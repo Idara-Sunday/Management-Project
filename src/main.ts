@@ -17,6 +17,8 @@ async function bootstrap() {
   .setTitle('Management System API')
   .setDescription('Management system api')
   .setVersion('1.0.0')
+  .addBearerAuth({type:'http',scheme:'bearer',bearerFormat:'Token'},
+  'access_token')
   .build();
   const document = SwaggerModule.createDocument(app,options);
   SwaggerModule.setup('api/v1',app,document)

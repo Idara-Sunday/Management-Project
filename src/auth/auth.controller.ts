@@ -7,17 +7,24 @@ import { RolesGuard } from './guard/role.guard';
 import { Roles } from './guard/roles';
 import { AuthGuard } from '@nestjs/passport';
 import { BlockGuard } from './guard/block.guard';
+import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
     constructor(private authService:AuthService){} 
+
   @Post('signup')
+  @ApiCreatedResponse({description:'User Registration'})
+  @ApiBody({type:signupDTO})
   async signUp(@Body() payload: signupDTO) {
     return await this.authService.signUp(payload);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('signin')
+  @ApiOkResponse({description:'User Login'})
+  @ApiUnauthorizedResponse({description:'Invalid Credentials'})
+  @ApiBody({type:SignInDto})
   async signin(@Body() payload:SignInDto,@Req() req:Request, @Res() res:Response){
 
    const token =  await this.authService.signIn(payload,res,req);
@@ -25,6 +32,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard() )
+  @ApiBearerAuth()
   @Get('profile')
   async getProfile(@Req() req:Request){
     return  req.user
