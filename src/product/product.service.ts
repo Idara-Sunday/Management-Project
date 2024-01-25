@@ -1,16 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
+import { Request } from 'express';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class ProductService {
-  constructor(@InjectRepository(Product) private readonly prodRepo:Repository<Product>){}
+  constructor(@InjectRepository(Product) private readonly prodRepo:Repository<Product>,@InjectRepository(User) private readonly userRepo:Repository<User>){}
 
- async  create(payload: CreateProductDto) {
-  return await this.prodRepo.save(payload)
+ async  create(payload: CreateProductDto, @Req() req:Request) {
+  const user = req.user;
+  const id = user['id'];
+  // const findUser = await this.userRepo.findOne({where:{id}})
+  const createProduct =  this.prodRepo.create({
+    ...payload,
+    user
+  })
+  return await this.prodRepo.save(createProduct)
+
     
   }
     

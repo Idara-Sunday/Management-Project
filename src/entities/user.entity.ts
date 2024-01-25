@@ -5,14 +5,7 @@ import { Product } from "src/product/entities/product.entity";
 
 @Entity()
 export class User extends Base{
-    @Column()
-    firstName:string;
-
-    @Column()
-    lastName:string;
-
-    @Column({nullable:true})
-    middleName: string;
+   
 
     @Column({
         unique:true
@@ -35,4 +28,11 @@ export class User extends Base{
     @OneToMany(()=>Product, (product)=>product.user)
     product:Product[]
     
+
+    userReturn (){
+        const {password, blocked, role ,id, created_At,updated_At, ...rest} = this
+        return rest
+     }
 } 
+
+ 

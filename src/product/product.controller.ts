@@ -1,23 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/guard/role.guard';
 import { Roles } from 'src/auth/guard/roles';
+import { Request } from 'express';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  async create(@Body() payload: CreateProductDto) { 
-    return await this.productService.create(payload);
+  @UseGuards(AuthGuard(),RolesGuard)
+  @Roles('admin','unknown')
+  async create(@Body() payload: CreateProductDto, @Req() req:Request) { 
+    return await this.productService.create(payload,req);
   }
 
   @Get()
-  // @UseGuards(AuthGuard(),RolesGuard)
-  // @Roles('admin','unknown')
+  @UseGuards(AuthGuard(),RolesGuard)
+  @Roles('admin','unknown')
   async findAll() {
     return await this.productService.findAll();
   }

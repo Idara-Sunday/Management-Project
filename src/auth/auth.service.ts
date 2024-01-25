@@ -73,7 +73,7 @@ export class AuthService {
     }
 
     const isMatch = await bcrypt.compare(password, registeredUser.password);
-    console.log(isMatch);
+    // console.log(isMatch);
 
     if (!isMatch) {
       throw new HttpException('Wrong password', 400);
@@ -110,7 +110,11 @@ export class AuthService {
   }
 
   async findUsers() {
-    return await this.authRepo.find();
+    // return await this.authRepo.find();
+    const users = await this.authRepo.find({relations:['product']});
+
+    const mappedUsers = users.map((user)=> user.userReturn())
+    return mappedUsers
   }
 
   async findEmail(email: string) {
@@ -125,7 +129,7 @@ export class AuthService {
     const authorizationHeader = headers.authorization;
     if (authorizationHeader) {
       const token = authorizationHeader.replace('Bearer', '').trim();
-      console.log(token);
+      // console.log(token);
 
       const secret = process.env.JWT_SECRET;
       try {
