@@ -1,15 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Request } from 'express';
+import { BlockGuard } from 'src/auth/guard/block.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
+  @UseGuards(AuthGuard(),BlockGuard)
+  @Post(':id/create-comment/')
+  async createComment(@Body() createCommentDto: CreateCommentDto,@Param('id') id:string, @Req() req:Request) {
+    return await this.commentsService.createComment(createCommentDto,id,req);
   }
 
   @Get()

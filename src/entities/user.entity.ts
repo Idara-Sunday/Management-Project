@@ -3,6 +3,7 @@ import { Base } from "./base.entity";
 import { Roles } from "src/enum/role";
 import { Product } from "src/product/entities/product.entity";
 import { Profile } from "./profile.entity";
+import { Comment } from "src/comments/entities/comment.entity";
 
 @Entity()
 export class User extends Base{
@@ -31,6 +32,9 @@ export class User extends Base{
 
     @OneToMany(()=>Product, (product)=>product.user)
     product:Product[]
+
+    @OneToMany(()=>Comment,(comments)=>comments.user)
+    comments:Comment[];
     
 
     userReturn (){
