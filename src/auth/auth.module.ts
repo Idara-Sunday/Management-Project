@@ -9,9 +9,10 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '../strategy/jwt.strategy';
 import { RolesGuard } from './guard/role.guard';
 import { BlockGuard } from './guard/block.guard';
+import { Profile } from 'src/entities/profile.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([User]),
+  imports:[TypeOrmModule.forFeature([User,Profile]),
 
   JwtModule.registerAsync({
     inject:[ConfigService],

@@ -1,7 +1,8 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, OneToMany, OneToOne } from "typeorm";
 import { Base } from "./base.entity";
 import { Roles } from "src/enum/role";
 import { Product } from "src/product/entities/product.entity";
+import { Profile } from "./profile.entity";
 
 @Entity()
 export class User extends Base{
@@ -24,6 +25,9 @@ export class User extends Base{
         default:Roles.unknown
     })
     role:Roles
+
+    @OneToOne(()=>Profile, (profile)=>profile.user)
+    profile:Profile
 
     @OneToMany(()=>Product, (product)=>product.user)
     product:Product[]

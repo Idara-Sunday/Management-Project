@@ -1,6 +1,9 @@
-import { Column } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
+import { Base } from "./base.entity";
+import { User } from "./user.entity";
 
-export class Profile {
+@Entity()
+export class Profile extends Base{
     @Column()
     firstName:string;
 
@@ -9,4 +12,8 @@ export class Profile {
 
     @Column({nullable:true})
     middleName: string;
+
+    @OneToOne(()=> User,(user)=>user.profile,{onDelete:'CASCADE'} )
+    @JoinColumn()
+    user:User
 }

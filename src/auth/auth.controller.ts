@@ -8,6 +8,7 @@ import { Roles } from './guard/roles';
 import { AuthGuard } from '@nestjs/passport';
 import { BlockGuard } from './guard/block.guard';
 import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ProfileDTO } from 'src/dto/profile.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -70,6 +71,12 @@ export class AuthController {
   @Get('hello')
   helloworld(){
     return `hello world`
+  }
+
+  @UseGuards(AuthGuard(),BlockGuard)
+  @Post('create-profile')
+  async createProfile(payload:ProfileDTO, @Req() req:Request){
+    return await this.authService.createProfile(payload,req)
   }
 
 }  

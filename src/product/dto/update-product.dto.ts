@@ -13,3 +13,4 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
     @MinLength(3)
     productBrand:string;
 }
+ 

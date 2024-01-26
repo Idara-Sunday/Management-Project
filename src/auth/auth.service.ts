@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
   Req,
@@ -15,12 +16,15 @@ import * as bcrypt from 'bcrypt';
 import { SignInDto } from '../dto/signin.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
+import { Profile } from 'src/entities/profile.entity';
+import { ProfileDTO } from 'src/dto/profile.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private authRepo: Repository<User>,
     private jwtService: JwtService,
+    @InjectRepository(Profile) private profileRepo:Repository<Profile>
   ) {}
 
   // IMPLEMENTING SIGN UP
@@ -141,8 +145,6 @@ export class AuthService {
 
         return {
           id:user.id,
-          firstname: user.firstName,
-          lastname: user.lastName,
           email: user.email,
           role: user.role,
         };
@@ -180,5 +182,27 @@ export class AuthService {
 
   async userbyId(id:string){
     return await this.authRepo.findOneBy({id})
+  }
+
+
+  async createProfile(payload:ProfileDTO ,@Req() req:Request){
+    const user = req.user;
+    if(!user){
+      throw new HttpException('user not found',HttpStatus.NOT_FOUND)
+    }
+    const id = user['id']
+
+    const findUser = await this.authRepo.findOne({where:{id:id}});
+
+    if(!findUser){
+      throw new HttpException('no user was found',HttpStatus.NOT_FOUND)
+    }
+
+    const userProfile = this.profileRepo.create(payload);
+
+    findUser.profile = userProfile
+
+    return await this.authRepo.save(findUser)
+
   }
 }
