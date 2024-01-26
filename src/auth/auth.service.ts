@@ -202,7 +202,7 @@ export class AuthService {
     if(!findUser){
       throw new HttpException('no user was found',HttpStatus.NOT_FOUND)
     }
-  
+  try{
     const userProfile = this.profileRepo.create({
       ...payload,
       user      
@@ -210,5 +210,10 @@ export class AuthService {
 
     return await this.profileRepo.save(userProfile)
 
+  }catch(error){
+    return error
   }
+}
+
+
 }
