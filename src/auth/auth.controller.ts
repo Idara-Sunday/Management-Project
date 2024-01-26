@@ -75,7 +75,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard(),BlockGuard)
   @Post('create-profile')
-  async createProfile(payload:ProfileDTO, @Req() req:Request){
+  async createProfile(@Body() payload:ProfileDTO, @Req() req:Request){
     return await this.authService.createProfile(payload,req)
   }
 

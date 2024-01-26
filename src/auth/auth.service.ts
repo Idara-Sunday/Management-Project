@@ -187,22 +187,28 @@ export class AuthService {
 
   async createProfile(payload:ProfileDTO ,@Req() req:Request){
     const user = req.user;
+    console.log(user)
+    // console.log(`this is user object ${user}`)
     if(!user){
       throw new HttpException('user not found',HttpStatus.NOT_FOUND)
     }
     const id = user['id']
+    // console.log(id)
 
     const findUser = await this.authRepo.findOne({where:{id:id}});
+    // console.log(`this is finduser ${findUser}`)
+    // console.log(findUser)
 
     if(!findUser){
       throw new HttpException('no user was found',HttpStatus.NOT_FOUND)
     }
+  
+    const userProfile = this.profileRepo.create({
+      ...payload,
+      user      
+    });
 
-    const userProfile = this.profileRepo.create(payload);
-
-    findUser.profile = userProfile
-
-    return await this.authRepo.save(findUser)
+    return await this.profileRepo.save(userProfile)
 
   }
 }

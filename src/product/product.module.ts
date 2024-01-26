@@ -8,7 +8,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { Profile } from 'src/entities/profile.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Product,User,Profile]),AuthModule],
+  imports:[TypeOrmModule.forFeature([Product,User]),AuthModule],
   controllers: [ProductController],
   providers: [ProductService], 
 })
