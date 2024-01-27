@@ -32,6 +32,18 @@ export class CommentsService {
       throw new HttpException('No product Found',HttpStatus.NOT_FOUND)
     }
 
+    // const commentt = this.commentRepo.create({
+    //   ...createCommentDto
+    // });
+
+    // findUser.comments =[commentt]
+    // findProduct.comments = [commentt]
+    //  await this.productRepo.save(findProduct)
+    //  await this.commentRepo.save(findUser)
+
+    // return {findProduct}
+
+
     const comment =  this.commentRepo.create({
       ...createCommentDto,
       user,

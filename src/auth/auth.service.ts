@@ -115,7 +115,7 @@ export class AuthService {
 
   async findUsers() {
     // return await this.authRepo.find();
-    const users = await this.authRepo.find({relations:['product']});
+    const users = await this.authRepo.find({relations:['product','comments','profile']});
 
     const mappedUsers = users.map((user)=> user.userReturn())
     return mappedUsers
@@ -210,5 +210,6 @@ export class AuthService {
   }
 }
 
+  
 
 }

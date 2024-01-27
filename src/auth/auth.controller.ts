@@ -54,15 +54,20 @@ export class AuthController {
     return await this.authService.findUsers()
   }
 
+  @UseGuards(AuthGuard(),RolesGuard)
+  @Roles('admin')
   @Post(':id/block')
-  async blockUser(@Param() id:string){
+  async blockUser(@Param('id') id:string){
 
     return await this.authService.blockUser(id);
 
   }
 
-  @Post('id/unblock')
-  async unblockUser(@Param() id:string){
+
+  @UseGuards(AuthGuard(),RolesGuard)
+  @Roles('admin')
+  @Post(':id/unblock')
+  async unblockUser(@Param('id') id:string){
 
     return await this.authService.unblockUser(id)
   }
