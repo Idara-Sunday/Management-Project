@@ -19,7 +19,7 @@ export class Product {
     @ManyToOne(()=>User,(user)=>user.product,{onDelete:'CASCADE'})
     user:User;
     
-    @ManyToMany(()=>Comment,(comments)=>comments.products,{onDelete:'CASCADE'})
+    @ManyToMany(()=>Comment,(comments)=>comments.products)
     @JoinTable()
     comments:Comment[]
 
