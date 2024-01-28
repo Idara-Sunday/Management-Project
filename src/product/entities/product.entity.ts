@@ -16,7 +16,7 @@ export class Product {
     @Column()
     productBrand:string;
 
-    @ManyToOne(()=>User,(user)=>user.product)
+    @ManyToOne(()=>User,(user)=>user.product,{onDelete:'CASCADE'})
     user:User;
     
     @ManyToMany(()=>Comment,(comments)=>comments.products,{onDelete:'CASCADE'})
