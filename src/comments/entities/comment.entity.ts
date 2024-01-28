@@ -16,7 +16,7 @@ export class Comment {
     @Column()
     text:string; 
 
-    @ManyToOne(()=>User,(user)=>user.comments,{onDelete:'CASCADE'})
+    @ManyToOne(()=>User,(user)=>user.comments)
     @JoinColumn()
     user:User;
 
