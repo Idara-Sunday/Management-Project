@@ -84,5 +84,15 @@ export class AuthController {
     return await this.authService.createProfile(payload,req)
   }
 
+  @UseGuards(AuthGuard(),BlockGuard,RolesGuard)
+  @Roles('admin')
+  @Post(':id/delete-user')
+  async deleteUser(@Param('id') id:string){
+
+    return await this.authService.blockUser(id)
+
+  }
+
+
 }  
  

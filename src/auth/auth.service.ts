@@ -210,6 +210,21 @@ export class AuthService {
   }
 }
 
-  
+  async deleteUser(id:string){
+    
+    const user = await this.authRepo.findOne({where:{id}});
+    if(!user){
+      throw new HttpException('User not found',HttpStatus.NOT_FOUND)
+    }
+
+    const deleteUser = await this.authRepo.delete(id)
+
+    return{
+      message:'user succesfully deleted',
+      deleteUser
+    }
+  }
+
+
 
 }
