@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { signupDTO } from '../dto/signup.dto';
 import { AuthService } from './auth.service';
 import { SignInDto } from '../dto/signin.dto';
@@ -86,7 +86,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard(),BlockGuard,RolesGuard)
   @Roles('admin')
-  @Post(':id/delete-user')
+  @Delete(':id/delete-user')
   async deleteUser(@Param('id') id:string){
 
     return await this.authService.blockUser(id)
