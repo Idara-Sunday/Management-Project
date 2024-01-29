@@ -70,6 +70,7 @@ export class CommentsService {
   .where('comment.id = :id', {id })
   .getOne();
 
+    console.log(userComment)
 
   if(!userComment){
     throw new HttpException('user not recognised',HttpStatus.BAD_REQUEST)
