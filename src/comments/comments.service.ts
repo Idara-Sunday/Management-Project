@@ -63,9 +63,15 @@ export class CommentsService {
 
   const userId = user['id']
 
-  const findUser = await this.authRepo.findOne({where:{id:userId}})
+  // const findUser = await this.authRepo.findOne({where:{id:userId}})
+  const userComment = await this.authRepo
+  .createQueryBuilder('user')
+  .innerJoin('user.comments', 'comment')
+  .where('comment.id = :id', {id })
+  .getOne();
 
-  if(!findUser){
+
+  if(!userComment){
     throw new HttpException('user not recognised',HttpStatus.BAD_REQUEST)
   }
 
