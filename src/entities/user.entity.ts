@@ -27,13 +27,13 @@ export class User extends Base{
     })
     role:Roles
 
-    @OneToOne(()=>Profile, (profile)=>profile.user, {onDelete:'CASCADE'})
+    @OneToOne(()=>Profile, (profile)=>profile.user)
     profile:Profile
 
-    @OneToMany(()=>Product, (product)=>product.user, {onDelete:'CASCADE'})
+    @OneToMany(()=>Product, (product)=>product.user)
     product:Product[]
 
-    @OneToMany(()=>Comment,(comments)=>comments.user, {onDelete:'CASCADE'})
+    @OneToMany(()=>Comment,(comments)=>comments.user)
     comments:Comment[];
     
 

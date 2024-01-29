@@ -16,10 +16,10 @@ export class Comment {
     @Column()
     text:string; 
 
-    @ManyToOne(()=>User,(user)=>user.comments)
+    @ManyToOne(()=>User,(user)=>user.comments,{onDelete:'SET NULL'})
     @JoinColumn()
     user:User;
 
-    @ManyToMany(()=>Product ,(products)=>products.comments)
+    @ManyToMany(()=>Product ,(products)=>products.comments,{onDelete:'CASCADE'})
     products:Product[] 
 }
