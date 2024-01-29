@@ -16,10 +16,14 @@ export class CommentsController {
     return await this.commentsService.createComment(createCommentDto,id,req);
   }
 
-  @Get()
-  findAll() {
-    return this.commentsService.findAll();
-  }
+  @UseGuards(AuthGuard(),BlockGuard)
+ @Delete(':id/delete-comment')
+ async deleteComment(@Param('id') id:string,@Req() req:Request){
+
+  return await this.commentsService.deleteComment(req,id)
+
+ }
+
 
   @Get(':id')
   findOne(@Param('id') id: string) {

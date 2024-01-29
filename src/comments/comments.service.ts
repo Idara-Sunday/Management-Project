@@ -58,8 +58,27 @@ export class CommentsService {
     return {saveComment,saveProductComment}
   }
 
-  findAll() {
-    return `This action returns all comments`;
+  async deleteComment(@Req() req:Request, id:string){
+    const user= req.user
+
+  const userId = user['id']
+
+  const findUser = await this.authRepo.findOne({where:{id:userId}})
+
+  if(!findUser){
+    throw new HttpException('user not recognised',HttpStatus.BAD_REQUEST)
+  }
+
+  const checkComment = await this.commentRepo.findOne({where:{id}})
+  if(!checkComment){
+    throw new HttpException('comment not found',HttpStatus.NOT_FOUND)
+  }
+
+  const deleteComment = await this.commentRepo.delete(id)
+  return{
+    message:'comment successfully deleted'
+  }
+
   }
 
   findOne(id: number) {
