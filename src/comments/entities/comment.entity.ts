@@ -16,9 +16,9 @@ export class Comment {
     @Column()
     text:string; 
 
-    // @ManyToOne(()=>User,(user)=>user.comments,{onDelete:'SET NULL'})
-    // @JoinColumn()
-    // user:User;
+    @ManyToOne(()=>User,(user)=>user.comments,{onDelete:'SET NULL'})
+    @JoinColumn()
+    user:User;
 
     @ManyToMany(()=>Product ,(products)=>products.comments)
     products:Product[] 

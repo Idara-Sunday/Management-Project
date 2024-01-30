@@ -33,8 +33,8 @@ export class User extends Base{
     @OneToMany(()=>Product, (product)=>product.user)
     product:Product[]
    
-    // @OneToMany(()=>Comment,(comments)=>comments.user)
-    // comments:Comment[];
+    @OneToMany(()=>Comment,(comments)=>comments.user)
+    comments:Comment[];
     
  
     userReturn (){
