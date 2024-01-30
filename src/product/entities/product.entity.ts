@@ -4,11 +4,11 @@ import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, Ma
 
 @Entity()
 export class Product {
-    @PrimaryGeneratedColumn('uuid')
-    productID:string;
+    @PrimaryGeneratedColumn()
+    productID:number;
 
     @CreateDateColumn()
-    createdAt:Date;
+    createdAt:Date; 
 
     @Column()
     productName:string;
@@ -20,7 +20,6 @@ export class Product {
     user:User;
     
     @ManyToMany(()=>Comment,(comments)=>comments.products)
-    @JoinTable()
     comments:Comment[]
 
 }

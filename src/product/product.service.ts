@@ -26,9 +26,9 @@ export class ProductService {
     
   async findAll() {
     return await this.prodRepo.find();
-  }
+  } 
 
-  async findOne(productID:string) {
+  async findOne(productID:number) {
     return await this.prodRepo.findOne({where:{productID}});
   }
 

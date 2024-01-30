@@ -16,25 +16,48 @@ export class CommentsService {
   ){}
 
 
-  async createComment(createCommentDto: CreateCommentDto, productId:string,@Req() req:Request) {
-    const user = req.user;
-    // console.log(user);
+  async createComment(createCommentDto: CreateCommentDto, productId:number,@Req() req:Request) {
+
+    const user = req.user; 
+    // console.log(user); 
     
-    const id = user['id'];
+    // const id = user['id'];
 
-    const findUser = await this.authRepo.findOne({where:{id:id}});
-    if(!findUser){
-      throw new HttpException('No user found',HttpStatus.NOT_FOUND);
-    }
+    // const findUser = await this.authRepo.findOne({where:{id:id},relations:['comments']});
+    // if(!findUser){
+    //   throw new HttpException('No user found',HttpStatus.NOT_FOUND);
+    // }
 
-    const findProduct = await this.productRepo.findOne({where:{productID:productId}});
+    const findProduct = await this.productRepo.findOne({where:{productID:productId},relations:['comments']});
+    console.log(findProduct);
+    
     if(!findProduct){
       throw new HttpException('No product Found',HttpStatus.NOT_FOUND)
     }
 
+    // const {text} =createCommentDto; 
+    const comment = this.commentRepo.create({
+      ...createCommentDto
+    }) 
+    
+
+    const saveProductComment = await this.commentRepo.save(comment)
+    console.log(saveProductComment);
+    const commentId = comment['id']
+    console.log(commentId);
+    
+    const findComment = await this.commentRepo.findOne({where:{id:commentId}})
+        
+    
+    findProduct.comments.push(findComment)
+    await this.productRepo.save(findProduct)
+    return {
+      findProduct 
+    }
+
     // const commentt = this.commentRepo.create({
     //   ...createCommentDto
-    // });
+    // }); 
 
     // findUser.comments =[commentt]
     // findProduct.comments = [commentt]
@@ -44,48 +67,113 @@ export class CommentsService {
     // return {findProduct}
 
 
-    const comment =  this.commentRepo.create({
-      ...createCommentDto,
-      user,
-      
-    });
-    findProduct.comments =[comment]
+    // const comment =  this.commentRepo.create({
+    //   ...createCommentDto,
+    //   ...findUser
+       
+    // });
+  //   findProduct.comments.push(
+  //     comment
+  //   )
+  // await this.productRepo.save(findProduct)
+  //   return {
+  //     message:'comment saved'
+  //   }
+ 
 
-    const saveComment = await this.commentRepo.save(comment);
+    // findProduct.comments =[comment]
 
-    const saveProductComment = await this.productRepo.save(findProduct)  
+    // const saveComment = await this.commentRepo.save(comment);
+   
+    // const saveProductComment = await this.productRepo.save(findProduct)  
     
-    return {saveComment,saveProductComment}
+    // return {saveProductComment}
+
+
+
+    // const someUser = await this.authRepo.findOne({where:{id:id}, relations:['comments']});
+    // const userId = someUser.comments.map(item => {
+    //   item.id
+    // })
   }
 
-  async deleteComment(@Req() req:Request, id:string){
+  async deleteComment(@Req() req:Request, id:number, productId:number){
     const user= req.user
+    console.log(user);
+    
 
   const userId = user['id']
 
   // const findUser = await this.authRepo.findOne({where:{id:userId}})
+
+  const checkComment = await this.commentRepo.findOne({where:{id}});
+
+  // console.log(checkComment)
+  if(!checkComment){
+    throw new HttpException('comment not found',HttpStatus.NOT_FOUND);
+  }
+
+  // TO FIND THE USER WHO MADE THIS COMMENT
   const userWhoMadeComment = await this.authRepo
   .createQueryBuilder('user')
   .innerJoin('user.comments', 'comment')
   .where('comment.id = :id', {id })
   .getOne();
 
-    console.log(userWhoMadeComment)
+    console.log(userWhoMadeComment);
 
-  if(!userWhoMadeComment){
-    throw new HttpException('user not recognised',HttpStatus.BAD_REQUEST)
+    const userWhoMadeCommentId =userWhoMadeComment['id']
+
+    /*
+  // TO FIND THE USER WHO POSTED THE PRODUCT THAT IS HAVING THE COMMENT
+  const userWhoPostedProduct = await this.commentRepo
+  .createQueryBuilder('comment')
+  .leftJoinAndSelect('comment.products','products')
+  // .leftJoinAndSelect('products.user','user')
+  // .select(['user.id', 'user.email', 'user.blocked', ])
+  .where('comment.id = :id',{id})
+  .getOne(); 
+
+  console.log(userWhoPostedProduct.products);
+  
+
+  
+  const userWhoPostedProductId =userWhoPostedProduct['id'];
+
+  */
+ /*
+ const productWithTheComment = await this.productRepo
+ .createQueryBuilder('product')
+ .leftJoinAndSelect('product.comments','products')
+ .where('product.productID = :productId',{productId}).
+ getone()
+
+ console.log(productWithTheComment);
+ */
+
+const productWithTheComment = await this.productRepo.find({
+  where:{productID:productId},
+  relations:['comments']
+})
+ 
+  // if(userId !== userWhoMadeCommentId){
+  //   throw new HttpException('You cant delete this comment cuz you wer not the one who posted made the comment nor posted the product',HttpStatus.NOT_IMPLEMENTED)
+  // }
+
+  // const deleteComment = await this.commentRepo.delete(id);
+  // return{
+  //   message:'comment successfully deleted',
+  //   deleteComment
+  // }
+
+  if(!productWithTheComment){
+    throw new HttpException('product with this comment not found',HttpStatus.NOT_FOUND);
   }
 
-  const checkComment = await this.commentRepo.findOne({where:{id}})
-  if(!checkComment){
-    throw new HttpException('comment not found',HttpStatus.NOT_FOUND)
+  return {
+    message:'its working',
+    productWithTheComment
   }
-
-  const deleteComment = await this.commentRepo.delete(id)
-  return{
-    message:'comment successfully deleted'
-  }
-
   }
 
   findOne(id: number) {

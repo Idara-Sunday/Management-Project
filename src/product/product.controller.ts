@@ -17,16 +17,16 @@ export class ProductController {
   async create(@Body() payload: CreateProductDto, @Req() req:Request) { 
     return await this.productService.create(payload,req);
   }
-
-  @Get()
+ 
+  @Get() 
   @UseGuards(AuthGuard(),RolesGuard)
   @Roles('admin','unknown')
   async findAll() {
     return await this.productService.findAll();
   }
-
+ 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: number) {
     return await this.productService.findOne(id);
   }
 

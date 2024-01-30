@@ -32,15 +32,15 @@ export class User extends Base{
 
     @OneToMany(()=>Product, (product)=>product.user)
     product:Product[]
-
-    @OneToMany(()=>Comment,(comments)=>comments.user)
-    comments:Comment[];
+   
+    // @OneToMany(()=>Comment,(comments)=>comments.user)
+    // comments:Comment[];
     
-
+ 
     userReturn (){
         const {password, blocked, role ,id, created_At,updated_At, ...rest} = this
         return rest
      }
-} 
+}  
 
  

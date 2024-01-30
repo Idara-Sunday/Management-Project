@@ -12,31 +12,31 @@ export class CommentsController {
 
   @UseGuards(AuthGuard(),BlockGuard)
   @Post(':id/create-comment/')
-  async createComment(@Body() createCommentDto: CreateCommentDto,@Param('id') id:string, @Req() req:Request) {
+  async createComment(@Body() createCommentDto: CreateCommentDto,@Param('id') id:number, @Req() req:Request) {
     return await this.commentsService.createComment(createCommentDto,id,req);
   }
 
   @UseGuards(AuthGuard(),BlockGuard)
- @Delete(':id/delete-comment')
- async deleteComment(@Param('id') id:string,@Req() req:Request){
+ @Delete(':productId/delete-comment/:id')
+ async deleteComment(@Param('productId') productId:number,@Req() req:Request,@Param('id') id:number){
 
-  return await this.commentsService.deleteComment(req,id)
+  return await this.commentsService.deleteComment(req,id,productId)
 
  }
 
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id:number) {
     return this.commentsService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
+  update(@Param('id') id: number, @Body() updateCommentDto: UpdateCommentDto) {
     return this.commentsService.update(+id, updateCommentDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.commentsService.remove(+id);
   }
 }

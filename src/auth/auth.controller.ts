@@ -57,7 +57,7 @@ export class AuthController {
   @UseGuards(AuthGuard(),RolesGuard)
   @Roles('admin')
   @Post(':id/block')
-  async blockUser(@Param('id') id:string){
+  async blockUser(@Param('id') id:number){
 
     return await this.authService.blockUser(id);
 
@@ -67,7 +67,7 @@ export class AuthController {
   @UseGuards(AuthGuard(),RolesGuard)
   @Roles('admin')
   @Post(':id/unblock')
-  async unblockUser(@Param('id') id:string){
+  async unblockUser(@Param('id') id:number){
 
     return await this.authService.unblockUser(id)
   }
@@ -87,7 +87,7 @@ export class AuthController {
   @UseGuards(AuthGuard(),BlockGuard,RolesGuard)
   @Roles('admin')
   @Delete(':id/delete-user')
-  async deleteUser(@Param('id') id:string){
+  async deleteUser(@Param('id') id:number){
 
     return await this.authService.deleteUser(id)
 

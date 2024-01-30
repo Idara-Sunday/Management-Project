@@ -156,7 +156,7 @@ export class AuthService {
     }
   }
 
-  async blockUser(id: string) {
+  async blockUser(id: number) {
     const user = await this.authRepo.findOneBy({ id });
 
     if (!user) {
@@ -168,7 +168,7 @@ export class AuthService {
     return await this.authRepo.save(user);
   }
 
-  async unblockUser(id: string) {
+  async unblockUser(id: number) {
     const user = await this.authRepo.findOneBy({ id });
 
     if (!user) {
@@ -180,7 +180,7 @@ export class AuthService {
     return await this.authRepo.save(user)
   }
 
-  async userbyId(id:string){
+  async userbyId(id:number){
     return await this.authRepo.findOneBy({id})
   }
 
@@ -210,7 +210,7 @@ export class AuthService {
   }
 }
 
-  async deleteUser(id:string){
+  async deleteUser(id:number){
     
     const user = await this.authRepo.findOne({where:{id}});
     if(!user){

@@ -4,8 +4,8 @@ import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, Ma
 
 @Entity()
 export class Comment {
-    @PrimaryGeneratedColumn('uuid')
-    id:string;
+    @PrimaryGeneratedColumn()
+    id:number;
 
     @CreateDateColumn()
     created_At:Date;
@@ -16,10 +16,11 @@ export class Comment {
     @Column()
     text:string; 
 
-    @ManyToOne(()=>User,(user)=>user.comments,{onDelete:'SET NULL'})
-    @JoinColumn()
-    user:User;
+    // @ManyToOne(()=>User,(user)=>user.comments,{onDelete:'SET NULL'})
+    // @JoinColumn()
+    // user:User;
 
-    @ManyToMany(()=>Product ,(products)=>products.comments,{onDelete:'CASCADE'})
+    @ManyToMany(()=>Product ,(products)=>products.comments,{eager:true})
+    @JoinTable()
     products:Product[] 
 }
