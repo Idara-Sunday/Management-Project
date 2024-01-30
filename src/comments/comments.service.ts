@@ -21,12 +21,13 @@ export class CommentsService {
     const user = req.user; 
     // console.log(user); 
     
-    // const id = user['id'];
+    const id = user['id'];
 
-    // const findUser = await this.authRepo.findOne({where:{id:id},relations:['comments']});
-    // if(!findUser){
-    //   throw new HttpException('No user found',HttpStatus.NOT_FOUND);
-    // }
+    const findUser = await this.authRepo.findOne({where:{id:id},relations:['comments']});
+    // console.log(findUser)
+    if(!findUser){
+      throw new HttpException('No user found',HttpStatus.NOT_FOUND);
+    }
 
      const findProduct =await this.productRepo.findOne({where:{productID:productId},relations:['comments']});
      if(!findProduct){
@@ -34,7 +35,8 @@ export class CommentsService {
      }
 
     const comment = this.commentRepo.create({
-      ...createCommentDto
+      ...createCommentDto,
+      user
     }); 
 
     const saveComment = await this.commentRepo.save(comment);
@@ -60,6 +62,7 @@ export class CommentsService {
 
     /////// **** THIS PART IS WORKING PERFECTLY **** ////////////
     /*
+    
     const findProduct = await this.productRepo.findOne({where:{productID:productId},relations:['comments']});
     console.log(findProduct);
     
@@ -80,13 +83,13 @@ export class CommentsService {
     const findComment = await this.commentRepo.findOne({where:{id:commentId}})
         
     
-    findProduct.comments.push(saveProductComment)
+    findProduct.comments.push(findComment)
     await this.productRepo.save(findProduct)
     return {
       findProduct 
-    }
-
-    */////////// ENDS HERE //////////
+    } 
+*/
+    /////////// ENDS HERE //////////
 
   }
 
