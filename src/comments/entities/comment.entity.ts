@@ -20,7 +20,6 @@ export class Comment {
     // @JoinColumn()
     // user:User;
 
-    @ManyToMany(()=>Product ,(products)=>products.comments,{eager:true})
-    @JoinTable()
+    @ManyToMany(()=>Product ,(products)=>products.comments)
     products:Product[] 
 }
