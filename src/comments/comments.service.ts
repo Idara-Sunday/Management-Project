@@ -103,9 +103,13 @@ export class CommentsService {
     throw new HttpException('No user found',HttpStatus.NOT_FOUND);
   }
 
+  const findProduct = await this.productRepo.findOne({where:{productID:productId}});
+  if(!findProduct){
+    throw new HttpException('No Product found',HttpStatus.NOT_FOUND);
+  }
+
   const checkComment = await this.commentRepo.findOne({where:{id:commentId},relations:['user','products']});
 
-  // console.log(checkComment)
   if(!checkComment){
     throw new HttpException('comment not found',HttpStatus.NOT_FOUND);
   }
