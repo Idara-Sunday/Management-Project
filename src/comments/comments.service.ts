@@ -94,7 +94,7 @@ export class CommentsService {
     
 
   const userId = reqUser['id']
-  console.log(userId);
+  // console.log(userId);
   
 
   const findUser = await this.authRepo.findOne({where:{id:userId}});
@@ -124,7 +124,7 @@ export class CommentsService {
     // console.log(userWhoMadeComment);
 
     const userWhoMadeCommentId =userWhoMadeComment['id']
-    console.log(userWhoMadeCommentId);
+    // console.log(userWhoMadeCommentId);
     
 
     
@@ -138,7 +138,7 @@ export class CommentsService {
 
   const productWithUserWhoPostedIt = (userWhoPostedProduct.products[0].user);
   const userWhoPostedProductId =productWithUserWhoPostedIt['id'];
-  console.log(userWhoPostedProductId);
+  // console.log(userWhoPostedProductId);
 
   
   if( userId !== userWhoPostedProductId && userId !== userWhoMadeCommentId ){
