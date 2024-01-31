@@ -20,6 +20,6 @@ export class Comment {
     @JoinColumn()
     user:User;
 
-    @ManyToMany(()=>Product ,(products)=>products.comments)
+    @ManyToMany(()=>Product ,(products)=>products.comments,{onDelete:'CASCADE'})
     products:Product[] 
 }

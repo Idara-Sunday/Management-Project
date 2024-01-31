@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '../product/entities/product.entity';
 import { Request } from 'express';
 import { User } from '../entities/user.entity';
+import { log } from 'console';
 
 @Injectable()
 export class CommentsService {
@@ -87,16 +88,22 @@ export class CommentsService {
 
   }
 
-  async deleteComment(@Req() req:Request, id:number, productId:number){
-    const user= req.user
-    console.log(user);
+  async deleteComment(@Req() req:Request, commentId:number, productId:number){
+    const reqUser= req.user
+    // console.log(reqUser);
     
 
-  const userId = user['id']
+  const userId = reqUser['id']
+  console.log(userId);
+  
 
-  // const findUser = await this.authRepo.findOne({where:{id:userId}})
+  const findUser = await this.authRepo.findOne({where:{id:userId}});
 
-  const checkComment = await this.commentRepo.findOne({where:{id}});
+  if(!findUser){
+    throw new HttpException('No user found',HttpStatus.NOT_FOUND);
+  }
+
+  const checkComment = await this.commentRepo.findOne({where:{id:commentId},relations:['user','products']});
 
   // console.log(checkComment)
   if(!checkComment){
@@ -107,63 +114,41 @@ export class CommentsService {
   const userWhoMadeComment = await this.authRepo
   .createQueryBuilder('user')
   .innerJoin('user.comments', 'comment')
-  .where('comment.id = :id', {id })
+  .where('comment.id = :commentId', {commentId })       
   .getOne();
 
-    console.log(userWhoMadeComment);
+    // console.log(userWhoMadeComment);
 
     const userWhoMadeCommentId =userWhoMadeComment['id']
+    console.log(userWhoMadeCommentId);
+    
 
-    /*
+    
   // TO FIND THE USER WHO POSTED THE PRODUCT THAT IS HAVING THE COMMENT
   const userWhoPostedProduct = await this.commentRepo
   .createQueryBuilder('comment')
   .leftJoinAndSelect('comment.products','products')
-  // .leftJoinAndSelect('products.user','user')
-  // .select(['user.id', 'user.email', 'user.blocked', ])
-  .where('comment.id = :id',{id})
+  .leftJoinAndSelect('products.user','user')
+  .where('comment.id = :commentId',{commentId})
   .getOne(); 
 
-  console.log(userWhoPostedProduct.products);
-  
+  const productWithUserWhoPostedIt = (userWhoPostedProduct.products[0].user);
+  const userWhoPostedProductId =productWithUserWhoPostedIt['id'];
+  console.log(userWhoPostedProductId);
 
   
-  const userWhoPostedProductId =userWhoPostedProduct['id'];
+  if( userId !== userWhoPostedProductId && userId !== userWhoMadeCommentId ){
+    throw new HttpException('You cant delete this comment cuz you wer not the one who posted made the comment nor posted the product',HttpStatus.NOT_IMPLEMENTED);
+  }
+  
+  const deleteComment = await this.commentRepo.delete(commentId);
+  return{
+    message:'comment successfully deleted'
+    
+  }
 
-  */
- /*
- const productWithTheComment = await this.productRepo
- .createQueryBuilder('product')
- .leftJoinAndSelect('product.comments','products')
- .where('product.productID = :productId',{productId}).
- getone()
-
- console.log(productWithTheComment);
- */
-
-const productWithTheComment = await this.productRepo.find({
-  where:{productID:productId},
-  relations:['comments']
-})
  
-  // if(userId !== userWhoMadeCommentId){
-  //   throw new HttpException('You cant delete this comment cuz you wer not the one who posted made the comment nor posted the product',HttpStatus.NOT_IMPLEMENTED)
-  // }
 
-  // const deleteComment = await this.commentRepo.delete(id);
-  // return{
-  //   message:'comment successfully deleted',
-  //   deleteComment
-  // }
-
-  if(!productWithTheComment){
-    throw new HttpException('product with this comment not found',HttpStatus.NOT_FOUND);
-  }
-
-  return {
-    message:'its working',
-    productWithTheComment
-  }
   }
 
   async findAllcomment(){

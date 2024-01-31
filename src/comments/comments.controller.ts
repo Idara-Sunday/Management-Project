@@ -16,11 +16,11 @@ export class CommentsController {
     return await this.commentsService.createComment(createCommentDto,id,req);
   }
 
-  @UseGuards(AuthGuard(),BlockGuard)
- @Delete(':productId/delete-comment/:id')
- async deleteComment(@Param('productId') productId:number,@Req() req:Request,@Param('id') id:number){
+ @UseGuards(AuthGuard(),BlockGuard)
+ @Delete(':productId/delete-comment/:commentId')
+ async deleteComment(@Param('productId') productId:number,@Req() req:Request,@Param('commentId') commentId:number){
 
-  return await this.commentsService.deleteComment(req,id,productId)
+  return await this.commentsService.deleteComment(req,commentId,productId)
 
  }
 
