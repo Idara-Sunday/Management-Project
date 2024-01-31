@@ -56,7 +56,7 @@ export class CommentsService {
     
 
     /////// **** THIS PART IS WORKING PERFECTLY **** ////////////
-    /*
+    /* ALTERNATIVE WAY FOR THE ABOVE APPROACH
     
     const findProduct = await this.productRepo.findOne({where:{productID:productId},relations:['comments']});
     console.log(findProduct);
@@ -110,6 +110,7 @@ export class CommentsService {
 
   const checkComment = await this.commentRepo.findOne({where:{id:commentId},relations:['user','products']});
 
+  // console.log(checkComment)
   if(!checkComment){
     throw new HttpException('comment not found',HttpStatus.NOT_FOUND);
   }
@@ -147,7 +148,8 @@ export class CommentsService {
   
   const deleteComment = await this.commentRepo.delete(commentId);
   return{
-    message:'comment successfully deleted'
+    message:'comment successfully deleted',
+    deleteComment
     
   }
 
