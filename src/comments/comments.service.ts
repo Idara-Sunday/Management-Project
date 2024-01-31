@@ -47,17 +47,11 @@ export class CommentsService {
     }
 
  
-
-   
-
- 
-   
+    // findProduct.comments=[saveComment] ****
+    
     // const saveProductComment = await this.productRepo.save(findProduct)  
     
     // return {saveProductComment}
-
-
-
     
 
     /////// **** THIS PART IS WORKING PERFECTLY **** ////////////
@@ -172,6 +166,10 @@ const productWithTheComment = await this.productRepo.find({
   }
   }
 
+  async findAllcomment(){
+    const findComment = await this.commentRepo.find({relations:['user']})
+    return findComment
+  }
   findOne(id: number) {
     return `This action returns a #${id} comment`;
   }
