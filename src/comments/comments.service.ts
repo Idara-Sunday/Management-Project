@@ -161,6 +161,9 @@ export class CommentsService {
     const findComment = await this.commentRepo.find({relations:['user']})
     return findComment
   }
+
+
+  
   findOne(id: number) {
     return `This action returns a #${id} comment`;
   }
