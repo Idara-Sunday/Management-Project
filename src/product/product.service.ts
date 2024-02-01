@@ -1,4 +1,4 @@
-import { Injectable, Req } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, Req } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,21 +25,43 @@ export class ProductService {
   }
     
 
-  async deleteProduct(productID:string,@Req() req:Request){
+  async deleteProduct(productID:number,@Req() req:Request){
     const user = req.user;
 
     const userId = user['id'];
 
-    const findUser = await this.userRepo.findOne({where:{id:userId},relations:['products']});
-    console.log(findUser);
+    const findUser = await this.userRepo.findOne({where:{id:userId}});
+    // console.log(findUser);
+    if(!findUser){
+      throw new HttpException('User not found',HttpStatus.NOT_FOUND);
+    }
+
+    const findProduct = await this.prodRepo.findOne({where:{productID},relations:['comments']});
+    console.log(findProduct);
+    
+
+    if(!findProduct){
+      throw new NotFoundException('product not found')            
+    }
 
     const findUserUsingQueryBuilder = await this.userRepo
     .createQueryBuilder('user')
-    .leftJoinAndSelect('user.products','products')
-    .where('products.productID = :productID',{productID})
+    .leftJoinAndSelect('user.product','product')
+    .where('product.productID = :productID',{productID})
     .getOne()
-    console.log(findUserUsingQueryBuilder);
+    // console.log(findUserUsingQueryBuilder);
+
+    const userWhoPostedTheProductID = findUserUsingQueryBuilder['id'];
+
+    if(userId !== userWhoPostedTheProductID){
+      throw new HttpException('you cant delete this product cuz you wer not the one who posted it',HttpStatus.NOT_IMPLEMENTED)
+    }
     
+    const delproduct = await this.prodRepo.delete(productID);
+
+    return {
+      delproduct
+    }
 
 
   }

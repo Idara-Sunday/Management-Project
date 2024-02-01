@@ -35,17 +35,33 @@ export class CommentsService {
       throw new HttpException('product not found',HttpStatus.NOT_FOUND);
      }
 
+     const products = [findProduct]
+
     const comment = this.commentRepo.create({
       ...createCommentDto,
-      user
+      user,
+      products
+      
     }); 
+  return await this.commentRepo.save(comment)
 
+  // ********* OR *******
+  /*
+  const comment = this.commentRepo.create({
+    ...createCommentDto,
+    user,
+  
+    
+  }); 
+    
     const saveComment = await this.commentRepo.save(comment);
     findProduct.comments.push(saveComment)
     await this.productRepo.save(findProduct)
     return{
       findProduct
-    }
+    } 
+    */
+// ******** ENDS HERE*********
 
  
     // findProduct.comments=[saveComment] ****

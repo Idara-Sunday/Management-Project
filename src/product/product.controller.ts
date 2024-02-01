@@ -28,7 +28,7 @@ export class ProductController {
 
   @Delete('delete-product/:productID')
   @UseGuards(AuthGuard())
-  async deleteProduct(@Param('productID') productID:string, @Req() req:Request){
+  async deleteProduct(@Param('productID') productID:number, @Req() req:Request){
 
     return await this.productService.deleteProduct(productID,req)
 
