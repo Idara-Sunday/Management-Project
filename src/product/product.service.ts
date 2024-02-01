@@ -24,6 +24,29 @@ export class ProductService {
     
   }
     
+
+  async deleteProduct(productID:string,@Req() req:Request){
+    const user = req.user;
+
+    const userId = user['id'];
+
+    const findUser = await this.userRepo.findOne({where:{id:userId},relations:['products']});
+    console.log(findUser);
+
+    const findUserUsingQueryBuilder = await this.userRepo
+    .createQueryBuilder('user')
+    .leftJoinAndSelect('user.products','products')
+    .where('products.productID = :productID',{productID})
+    .getOne()
+    console.log(findUserUsingQueryBuilder);
+    
+
+
+  }
+
+
+
+
   async findAll() {
     return await this.prodRepo.find();
   } 

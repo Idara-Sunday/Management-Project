@@ -25,6 +25,19 @@ export class ProductController {
     return await this.productService.findAll();
   }
  
+
+  @Delete('delete-product/:productID')
+  @UseGuards(AuthGuard())
+  async deleteProduct(@Param('productID') productID:string, @Req() req:Request){
+
+    return await this.productService.deleteProduct(productID,req)
+
+
+  }
+
+
+
+
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return await this.productService.findOne(id);
