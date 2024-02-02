@@ -18,8 +18,8 @@ export class Comment {
 
     @ManyToOne(()=>User,(user)=>user.comments,{onDelete:'CASCADE'})
     @JoinColumn()
-    user:User;
+    user:User; 
 
     @ManyToMany(()=>Product ,(products)=>products.comments,{onDelete:'CASCADE'})
-    products:Product[] 
+    products:Product[]     
 }

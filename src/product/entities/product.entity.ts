@@ -16,10 +16,10 @@ export class Product {
     @Column()
     productBrand:string;
 
-    @ManyToOne(()=>User,(user)=>user.product,{onDelete:'CASCADE'})
+    @ManyToOne(()=>User,(user)=>user.product,{onDelete:'CASCADE'})         
     user:User;
-    
-    @ManyToMany(()=>Comment,(comments)=>comments.products)
+        
+    @ManyToMany(()=>Comment,(comments)=>comments.products,)
     @JoinTable()
     comments:Comment[]  
 

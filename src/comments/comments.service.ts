@@ -25,7 +25,7 @@ export class CommentsService {
     const id = user['id'];
 
     const findUser = await this.authRepo.findOne({where:{id:id},relations:['comments']});
-    // console.log(findUser)
+    // console.log(findUser) 
     if(!findUser){
       throw new HttpException('No user found',HttpStatus.NOT_FOUND);
     }

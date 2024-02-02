@@ -9,7 +9,7 @@ import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class ProductService {
-  constructor(@InjectRepository(Product) private readonly prodRepo:Repository<Product>,@InjectRepository(User) private readonly userRepo:Repository<User>){}
+  constructor(@InjectRepository(Product) private readonly prodRepo:Repository<Product>,@InjectRepository(User) private readonly userRepo:Repository<User>,@InjectRepository(Comment) private readonly commentRepo: Repository<Comment>){}
 
  async  create(payload: CreateProductDto, @Req() req:Request) {
   const user = req.user;
@@ -37,7 +37,8 @@ export class ProductService {
     }
 
     const findProduct = await this.prodRepo.findOne({where:{productID},relations:['comments']});
-    console.log(findProduct);
+    const commentIds = findProduct.comments.map((comment)=>comment.id);
+    console.log(commentIds)
     
 
     if(!findProduct){
@@ -55,8 +56,16 @@ export class ProductService {
 
     if(userId !== userWhoPostedTheProductID){
       throw new HttpException('you cant delete this product cuz you wer not the one who posted it',HttpStatus.NOT_IMPLEMENTED)
-    }
-    
+    } 
+
+    await this.prodRepo
+    .createQueryBuilder()
+    .relation(Product,'comments')
+    .of(productID)
+    .remove(commentIds)
+
+
+   await this.commentRepo.delete(commentIds)
     const delproduct = await this.prodRepo.delete(productID);
 
     return {
