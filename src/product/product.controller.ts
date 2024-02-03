@@ -36,20 +36,9 @@ export class ProductController {
   }
 
 
-
-
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return await this.productService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() payload: UpdateProductDto) {
-    return this.productService.update(id, payload);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.remove(id);
-  }
 }

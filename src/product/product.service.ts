@@ -39,8 +39,6 @@ export class ProductService {
 
     const findProduct = await this.prodRepo.findOne({where:{productID},relations:['comments']});
    
-    
-
     if(!findProduct){
       throw new NotFoundException('product not found')            
     }
@@ -95,7 +93,6 @@ export class ProductService {
 
 
 
-
   async findAll() {
     return await this.prodRepo.find();
   } 
@@ -104,12 +101,6 @@ export class ProductService {
     return await this.prodRepo.findOne({where:{productID}});
   }
 
-  async update(id:string, payload: UpdateProductDto) {
-    return this.prodRepo.update(id,payload);
-  }
+ 
 
-
-  async remove(id:string) {
-    return this.prodRepo.delete(id);
-  }
 }

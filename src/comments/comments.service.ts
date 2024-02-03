@@ -64,7 +64,7 @@ export class CommentsService {
 // ******** ENDS HERE*********
 
  
-    // findProduct.comments=[saveComment] ****
+    // findProduct.comments=[saveComment] **** THIS APPROACH DOESN'T WORK
     
     // const saveProductComment = await this.productRepo.save(findProduct)  
     
@@ -102,6 +102,11 @@ export class CommentsService {
 */
     /////////// ENDS HERE //////////
 
+  }
+
+
+  async editComment(){
+    
   }
 
   async deleteComment(@Req() req:Request, commentId:number, productId:number){
@@ -184,9 +189,7 @@ export class CommentsService {
     return `This action returns a #${id} comment`;
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
-  }
+ 
 
   remove(id: number) {
     return `This action removes a #${id} comment`;
