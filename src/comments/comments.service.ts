@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Req } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, Param, Req } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Comment } from './entities/comment.entity';
@@ -105,9 +105,54 @@ export class CommentsService {
   }
 
 
-  async editComment(){
+  async editComment(@Req() req:Request, payload:UpdateCommentDto,productId:number,commentId:number){
+
+    const requestUser = req.user;
+    console.log(requestUser);
+
+    const userId = requestUser['id'];
+
+    const user = await this.authRepo.findOne({where:{id:userId}});
+
+    if(!user){
+      throw new NotFoundException('User not found');
+    }
     
+    // const productWithTheComment = await this.productRepo.findOne({where:{productID:productId}});
+    // if(!productWithTheComment){
+    //   throw new NotFoundException('product not found');
+    
+    // }
+
+    // const findComment = await this.commentRepo.findOne({where:{id:commentId}});
+    // console.log(findComment);
+    
+    // if(!findComment){
+    //   throw new NotFoundException('comment not found');
+    // }
+
+    const productWithTheComment = await this.productRepo
+    .createQueryBuilder('product')
+    .leftJoinAndSelect('product.comments','comments')
+    .where('comments.id = :commentId',{commentId})
+    .getOne()
+    console.log(productWithTheComment);
+    
+
+    const userWhoMadeComment= await this.authRepo
+    .createQueryBuilder('user')
+    .leftJoinAndSelect('user.comments','comments')
+    .where('comments.id = :commentId', {commentId})
+    .getOne()
+
+    console.log(userWhoMadeComment);
+    
+
+    // return await this.commentRepo.update(commentId,payload)
+
   }
+
+
 
   async deleteComment(@Req() req:Request, commentId:number, productId:number){
     const reqUser= req.user

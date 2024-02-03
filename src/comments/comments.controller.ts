@@ -11,7 +11,7 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @UseGuards(AuthGuard(),BlockGuard)
-  @Post(':id/create-comment/')
+  @Post(':id/create-comment')
   async createComment(@Body() createCommentDto: CreateCommentDto,@Param('id') id:number, @Req() req:Request) {
     return await this.commentsService.createComment(createCommentDto,id,req);
   }
@@ -36,6 +36,12 @@ export class CommentsController {
     return this.commentsService.findOne(+id);
   }
 
+
+  @UseGuards(AuthGuard(),BlockGuard)
+  @Patch(':productId/edit-comment/:commentId')
+  async editComment(@Req() req:Request,@Body() payload:UpdateCommentDto, @Param('productId') productId:number, @Param('commentId') commentId:number){
+    return await this.commentsService.editComment(req,payload,productId,commentId)
+  }
  
 
   @Delete(':id')
