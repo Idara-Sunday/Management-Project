@@ -6,11 +6,12 @@ import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
 import { User } from 'src/entities/user.entity';
+import { Comment } from 'src/comments/entities/comment.entity';
 
 @Injectable()
 export class ProductService {
   constructor(@InjectRepository(Product) private readonly prodRepo:Repository<Product>,@InjectRepository(User) private readonly userRepo:Repository<User>,@InjectRepository(Comment) private readonly commentRepo: Repository<Comment>){}
-
+  
  async  create(payload: CreateProductDto, @Req() req:Request) {
   const user = req.user;
   const id = user['id'];
@@ -37,13 +38,14 @@ export class ProductService {
     }
 
     const findProduct = await this.prodRepo.findOne({where:{productID},relations:['comments']});
-    const commentIds = findProduct.comments.map((comment)=>comment.id);
-    console.log(commentIds)
+   
     
 
     if(!findProduct){
       throw new NotFoundException('product not found')            
     }
+ 
+    // **** THE VARIABLE BELOW IS TO FIND FIND THE USER WHO POSTED THE PRODUCT ****
 
     const findUserUsingQueryBuilder = await this.userRepo
     .createQueryBuilder('user')
@@ -57,19 +59,29 @@ export class ProductService {
     if(userId !== userWhoPostedTheProductID){
       throw new HttpException('you cant delete this product cuz you wer not the one who posted it',HttpStatus.NOT_IMPLEMENTED)
     } 
+     console.log('these are the comment ids');
+     
+    const commentIds = findProduct.comments.map((comment)=>comment.id);
+    console.log(commentIds)
+    if(commentIds.length < 1){
+      const delProd = await this.prodRepo.delete(productID);
+      return{
+        message:'product succesfully deleted',
+        delProd
+      }
+    }
+    // await this.prodRepo
+    // .createQueryBuilder()
+    // .relation(Product,'comments')
+    // .of(productID)
+    // .remove(commentIds)
 
-    await this.prodRepo
-    .createQueryBuilder()
-    .relation(Product,'comments')
-    .of(productID)
-    .remove(commentIds)
-
-
-   await this.commentRepo.delete(commentIds)
-    const delproduct = await this.prodRepo.delete(productID);
-
+  const delProd = await this.prodRepo.delete(productID);
+   await this.commentRepo.delete(commentIds) 
+   
     return {
-      delproduct
+      message:'product deleted successfully',
+      delProd
     }
 
 
