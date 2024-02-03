@@ -70,11 +70,17 @@ export class ProductService {
         delProd
       }
     }
+
+    // ******* THIS APPROACH BELOW IS TO ALSO DELETE A PRODUCT AND IT RELATED COMMENTS IN THE JOIN TABLE BUT NOT DELETING THE COMMENTS IN THE COMMENTS TABLE  ******
+
     // await this.prodRepo
     // .createQueryBuilder()
     // .relation(Product,'comments')
     // .of(productID)
     // .remove(commentIds)
+    
+    // ******  ENDS HERE ******
+     
 
   const delProd = await this.prodRepo.delete(productID);
    await this.commentRepo.delete(commentIds) 
