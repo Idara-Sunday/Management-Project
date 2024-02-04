@@ -38,9 +38,9 @@ export class CommentsController {
 
 
   @UseGuards(AuthGuard(),BlockGuard)
-  @Patch(':productId/edit-comment/:commentId')
-  async editComment(@Req() req:Request,@Body() payload:UpdateCommentDto, @Param('productId') productId:number, @Param('commentId') commentId:number){
-    return await this.commentsService.editComment(req,payload,productId,commentId)
+  @Patch('edit-comment/:commentId')
+  async editComment(@Req() req:Request,@Body() payload:UpdateCommentDto, @Param('commentId') commentId:number){
+    return await this.commentsService.editComment(req,payload,commentId)
   }
  
 

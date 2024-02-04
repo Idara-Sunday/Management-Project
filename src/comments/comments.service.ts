@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException, Param, Req } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException, Param, Req } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Comment } from './entities/comment.entity';
@@ -105,39 +105,35 @@ export class CommentsService {
   }
 
 
-  async editComment(@Req() req:Request, payload:UpdateCommentDto,productId:number,commentId:number){
+  async editComment(@Req() req:Request, payload:UpdateCommentDto,commentId:number){
 
     const requestUser = req.user;
-    console.log(requestUser);
 
     const userId = requestUser['id'];
 
-    const user = await this.authRepo.findOne({where:{id:userId}});
+    const user = await this.authRepo.findOne({where:{id:userId}}); 
 
     if(!user){
       throw new NotFoundException('User not found');
     }
     
-    // const productWithTheComment = await this.productRepo.findOne({where:{productID:productId}});
-    // if(!productWithTheComment){
-    //   throw new NotFoundException('product not found');
-    
-    // }
-
-    // const findComment = await this.commentRepo.findOne({where:{id:commentId}});
-    // console.log(findComment);
-    
-    // if(!findComment){
-    //   throw new NotFoundException('comment not found');
-    // }
 
     const productWithTheComment = await this.productRepo
     .createQueryBuilder('product')
     .leftJoinAndSelect('product.comments','comments')
     .where('comments.id = :commentId',{commentId})
-    .getOne()
-    console.log(productWithTheComment);
+    .getOne()    
+
+    if(!productWithTheComment){
+      throw new HttpException('product not found',HttpStatus.BAD_REQUEST)
+    }
+
+   
+    const findComment = await this.commentRepo.findOne({where:{id:commentId}});
     
+    if(!findComment){
+      throw new NotFoundException('comment not found');
+    }
 
     const userWhoMadeComment= await this.authRepo
     .createQueryBuilder('user')
@@ -145,22 +141,22 @@ export class CommentsService {
     .where('comments.id = :commentId', {commentId})
     .getOne()
 
-    console.log(userWhoMadeComment);
-    
+    const userWhoMadeCommentId = userWhoMadeComment['id'];
 
-    // return await this.commentRepo.update(commentId,payload)
+    if(userId !== userWhoMadeCommentId){
+      throw new HttpException('you cant edit this comment',HttpStatus.BAD_REQUEST)
+    }
+    
+    return await this.commentRepo.update(commentId,payload)
 
   }
 
 
 
   async deleteComment(@Req() req:Request, commentId:number, productId:number){
-    const reqUser= req.user
-    // console.log(reqUser);
-    
+    const reqUser= req.user; 
 
-  const userId = reqUser['id']
-  // console.log(userId);
+  const userId = reqUser['id'];
   
 
   const findUser = await this.authRepo.findOne({where:{id:userId}});
@@ -176,7 +172,6 @@ export class CommentsService {
 
   const checkComment = await this.commentRepo.findOne({where:{id:commentId},relations:['user','products']});
 
-  // console.log(checkComment)
   if(!checkComment){
     throw new HttpException('comment not found',HttpStatus.NOT_FOUND);
   }
@@ -188,12 +183,7 @@ export class CommentsService {
   .where('comment.id = :commentId', {commentId })       
   .getOne();
 
-    // console.log(userWhoMadeComment);
-
-    const userWhoMadeCommentId =userWhoMadeComment['id']
-    // console.log(userWhoMadeCommentId);
-    
-
+  const userWhoMadeCommentId =userWhoMadeComment['id'];
     
   // TO FIND THE USER WHO POSTED THE PRODUCT THAT IS HAVING THE COMMENT
   const userWhoPostedProduct = await this.commentRepo
@@ -205,8 +195,6 @@ export class CommentsService {
 
   const productWithUserWhoPostedIt = (userWhoPostedProduct.products[0].user);
   const userWhoPostedProductId =productWithUserWhoPostedIt['id'];
-  // console.log(userWhoPostedProductId);
-
   
   if( userId !== userWhoPostedProductId && userId !== userWhoMadeCommentId ){
     throw new HttpException('You cant delete this comment cuz you wer not the one who posted made the comment nor posted the product',HttpStatus.NOT_IMPLEMENTED);
@@ -215,7 +203,7 @@ export class CommentsService {
   const deleteComment = await this.commentRepo.delete(commentId);
   return{
     message:'comment successfully deleted',
-    deleteComment
+    // deleteComment
     
   }
 

@@ -9,8 +9,7 @@ export class BlockGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
 
         const user = request.user?.id;
-        console.log(user)
-        // const findUser = await this.blockService.userbyId(user)
+        
 
         if(user.blocked || !user){
             throw new UnauthorizedException(`invalid user`)
