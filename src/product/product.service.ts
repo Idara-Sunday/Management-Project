@@ -75,7 +75,7 @@ export class ProductService {
     // .createQueryBuilder()
     // .relation(Product,'comments')
     // .of(productID)
-    // .remove(commentIds)
+    // .remove(commentIds) 
     
     // ******  ENDS HERE ******
      

@@ -9,13 +9,13 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
-
+  
   @UseGuards(AuthGuard(),BlockGuard)
   @Post(':id/create-comment')
   async createComment(@Body() createCommentDto: CreateCommentDto,@Param('id') id:number, @Req() req:Request) {
     return await this.commentsService.createComment(createCommentDto,id,req);
-  }
-
+  }  
+ 
  @UseGuards(AuthGuard(),BlockGuard)
  @Delete(':productId/delete-comment/:commentId')
  async deleteComment(@Param('productId') productId:number,@Req() req:Request,@Param('commentId') commentId:number){
