@@ -27,13 +27,13 @@ export class CommentsController {
 
  @Get('all-comments')
  async getAll(){
-  return await this.commentsService.findAllcomment()
+  return await this.commentsService.findAllcomments()
  }
 
 
-  @Get(':id')
-  findOne(@Param('id') id:number) {
-    return this.commentsService.findOne(+id);
+  @Get('getOneComment/:commentId')
+  findOneComment(@Param('commentId') id:number) {
+    return this.commentsService.findOneComment(id);
   }
 
 

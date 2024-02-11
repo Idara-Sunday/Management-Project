@@ -1,3 +1,13 @@
 npm i @nestjs/passport passport passport-google-oauth20
 
 npm i -D @types/passport-google-oauth20
+
+https://vercel.com/idara-sunday-ekpenes-projects/my-crud-app/9sjhtwdmKz1odovgDKwmJKBAd23L
+
+https://my-crud-7fyh2tgr8-idara-sunday-ekpenes-projects.vercel.app
+
+ Inspect: https://vercel.com/idara-sunday-ekpenes-projects/my-crud-app/FSPAZEWrX1uXeimzCCtwEJ23ZH3t [9s]
+✅  Production: https://my-crud-hodwalu0b-idara-sunday-ekpenes-projects.vercel.app 
+
+https://vercel.com/idara-sunday-ekpenes-projects/my-crud-app/9hAUguXSkUX9Q7q9v9q3UyPqdfpQ [8s]
+✅  Production: https://my-crud-q4aondji8-idara-sunday-ekpenes-projects.vercel.app 

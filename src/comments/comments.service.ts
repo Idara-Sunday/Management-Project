@@ -203,7 +203,7 @@ export class CommentsService {
   const deleteComment = await this.commentRepo.delete(commentId);
   return{
     message:'comment successfully deleted',
-    // deleteComment
+    deleteComment
     
   }
 
@@ -211,15 +211,16 @@ export class CommentsService {
 
   }
 
-  async findAllcomment(){
-    const findComment = await this.commentRepo.find({relations:['user']})
-    return findComment
+  async findAllcomments(){
+    const findcomments = await this.commentRepo.find({relations:['user']})
+    return findcomments
   }
 
 
   
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
+  async findOneComment(commentId: number) {
+    const findOneComment = await this.commentRepo.findOne({where:{id:commentId},relations:['user']});
+    return findOneComment
   }
 
  
