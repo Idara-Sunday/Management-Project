@@ -94,8 +94,12 @@ export class ProductService {
 
 
   async findAll() {
-    return await this.prodRepo.find({relations:['user','comments']});
+    const allUsers = await this.prodRepo.find({relations:['user','comments']});
+    // console.log(allUsers);
+     return allUsers
   } 
+
+
 
   async findOne(productID:number) {
     return await this.prodRepo.findOne({where:{productID},relations:['comments']});
