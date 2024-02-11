@@ -12,7 +12,7 @@ import { Comment } from 'src/comments/entities/comment.entity';
 export class ProductService {
   constructor(@InjectRepository(Product) private readonly prodRepo:Repository<Product>,@InjectRepository(User) private readonly userRepo:Repository<User>,@InjectRepository(Comment) private readonly commentRepo: Repository<Comment>){}
   
- async  create(payload: CreateProductDto, @Req() req:Request) {
+ async create(payload: CreateProductDto, @Req() req:Request) {
   const user = req.user;
   const id = user['id'];
   // const findUser = await this.userRepo.findOne({where:{id}})
@@ -94,11 +94,11 @@ export class ProductService {
 
 
   async findAll() {
-    return await this.prodRepo.find();
+    return await this.prodRepo.find({relations:['user','comments']});
   } 
 
   async findOne(productID:number) {
-    return await this.prodRepo.findOne({where:{productID}});
+    return await this.prodRepo.findOne({where:{productID},relations:['comments']});
   }
 
  

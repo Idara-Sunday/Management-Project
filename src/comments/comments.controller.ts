@@ -24,15 +24,16 @@ export class CommentsController {
 
  }
 
-
+ @UseGuards(AuthGuard(),BlockGuard)
  @Get('all-comments')
  async getAll(){
   return await this.commentsService.findAllcomments()
  }
 
 
+  @UseGuards(AuthGuard(),BlockGuard)
   @Get('getOneComment/:commentId')
-  findOneComment(@Param('commentId') id:number) {
+  async findOneComment(@Param('commentId') id:number) {
     return this.commentsService.findOneComment(id);
   }
 

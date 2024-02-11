@@ -216,7 +216,6 @@ export class CommentsService {
     return findcomments
   }
 
-
   
   async findOneComment(commentId: number) {
     const findOneComment = await this.commentRepo.findOne({where:{id:commentId},relations:['user']});
