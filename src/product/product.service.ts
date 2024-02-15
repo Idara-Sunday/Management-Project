@@ -15,7 +15,6 @@ export class ProductService {
  async create(payload: CreateProductDto, @Req() req:Request) {
   const user = req.user;
   const id = user['id'];
-  // const findUser = await this.userRepo.findOne({where:{id}})
   const createProduct =  this.prodRepo.create({
     ...payload,
     user
@@ -32,7 +31,6 @@ export class ProductService {
     const userId = user['id'];
 
     const findUser = await this.userRepo.findOne({where:{id:userId}});
-    // console.log(findUser);
     if(!findUser){
       throw new HttpException('User not found',HttpStatus.NOT_FOUND);
     }
@@ -50,7 +48,6 @@ export class ProductService {
     .leftJoinAndSelect('user.product','product')
     .where('product.productID = :productID',{productID})
     .getOne()
-    // console.log(findUserUsingQueryBuilder);
 
     const userWhoPostedTheProductID = findUserUsingQueryBuilder['id'];
 
@@ -95,7 +92,6 @@ export class ProductService {
 
   async findAll() {
     const allUsers = await this.prodRepo.find({relations:['user','comments']});
-    // console.log(allUsers);
      return allUsers
   } 
 
