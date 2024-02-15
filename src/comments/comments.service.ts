@@ -20,12 +20,10 @@ export class CommentsService {
   async createComment(createCommentDto: CreateCommentDto, productId:number,@Req() req:Request) {
 
     const user = req.user; 
-    // console.log(user); 
     
     const id = user['id'];
 
     const findUser = await this.authRepo.findOne({where:{id:id},relations:['comments']});
-    // console.log(findUser) 
     if(!findUser){
       throw new HttpException('No user found',HttpStatus.NOT_FOUND);
     }
