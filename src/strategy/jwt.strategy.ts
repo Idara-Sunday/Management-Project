@@ -19,7 +19,6 @@ export class JwtStrategy extends PassportStrategy(Strategy){
 
         try{ 
             const {email} = payload;
-            // console.log(email)
             const user =await this.authService.findEmail(email);
             if(!user){
                 throw new UnauthorizedException('Login first to access this endpoint')
