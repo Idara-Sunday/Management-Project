@@ -160,7 +160,8 @@ export class AuthService {
 
     user.blocked = true;
 
-    return await this.authRepo.save(user);
+    const saveUser = await this.authRepo.save(user);
+    return saveUser.userReturn();
   }
 
   async unblockUser(id: number) {
@@ -172,7 +173,9 @@ export class AuthService {
 
     user.blocked = false;
 
-    return await this.authRepo.save(user)
+    // return await this.authRepo.save(user);
+    const saveUser = await this.authRepo.save(user);
+    return saveUser.userReturn();
   }
 
   async userbyId(id:number){
