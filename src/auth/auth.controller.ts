@@ -89,10 +89,13 @@ export class AuthController {
   @Delete(':id/delete-user')
   async deleteUser(@Param('id') id:number){
 
-    return await this.authService.deleteUser(id)
+    return await this.authService.deleteUser(id);
 
   }
 
-
+   @Get(':userId')
+   async findUserById(@Param('userId') userId:number){
+    return await this.authService.userbyId(userId);
+   }
 }  
  

@@ -182,7 +182,7 @@ export class AuthService {
       throw new HttpException('User Not found',HttpStatus.NOT_FOUND)
     }
     
-    return findUser
+    return findUser.userReturn()
 
   }
 

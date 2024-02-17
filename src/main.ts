@@ -12,7 +12,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist:true
   }))
-  app.setGlobalPrefix('api/v1')
+  app.setGlobalPrefix('api/v1') 
   const options = new DocumentBuilder()
   .setTitle('Management System API')
   .setDescription('Management system api')
