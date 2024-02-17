@@ -74,7 +74,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard(),BlockGuard)
   @Get('hello')
-  helloworld(){
+  helloWorld(){
     return `hello world`
   }
 

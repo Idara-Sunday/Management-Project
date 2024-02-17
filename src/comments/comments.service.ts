@@ -55,13 +55,13 @@ export class CommentsService {
     const saveComment = await this.commentRepo.save(comment);
     findProduct.comments.push(saveComment)
     await this.productRepo.save(findProduct)
-    return{
+    return{ 
       findProduct
-    } 
+    }            
     */
-// ******** ENDS HERE*********
+// ******** ENDS HERE*********    
 
- 
+  
     // findProduct.comments=[saveComment] **** THIS APPROACH DOESN'T WORK
     
     // const saveProductComment = await this.productRepo.save(findProduct)  
