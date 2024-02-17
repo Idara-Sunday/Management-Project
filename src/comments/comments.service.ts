@@ -217,7 +217,10 @@ export class CommentsService {
   
   async findOneComment(commentId: number) {
     const findOneComment = await this.commentRepo.findOne({where:{id:commentId},relations:['user']});
-    return findOneComment
+    if(!findOneComment){
+      throw new HttpException('No comment Found',404);
+    }
+    return findOneComment;
   }
 
  
