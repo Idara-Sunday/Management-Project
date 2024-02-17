@@ -98,7 +98,12 @@ export class ProductService {
 
 
   async findOne(productID:number) {
-    return await this.prodRepo.findOne({where:{productID},relations:['comments']});
+    // return await this.prodRepo.findOne({where:{productID},relations:['comments']});
+    const findProduct = await this.prodRepo.findOne({where:{productID},relations:['comments']});
+    if(!findProduct){
+      throw new HttpException('Product Not Found',404);
+    }
+    return findProduct
   }
 
  

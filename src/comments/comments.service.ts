@@ -180,7 +180,7 @@ export class CommentsService {
   .innerJoin('user.comments', 'comment')
   .where('comment.id = :commentId', {commentId })       
   .getOne();
-
+ 
   const userWhoMadeCommentId =userWhoMadeComment['id'];
     
   // TO FIND THE USER WHO POSTED THE PRODUCT THAT IS HAVING THE COMMENT
