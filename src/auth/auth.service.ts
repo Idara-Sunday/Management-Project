@@ -176,7 +176,14 @@ export class AuthService {
   }
 
   async userbyId(id:number){
-    return await this.authRepo.findOneBy({id})
+    const findUser = await this.authRepo.findOne({where:{id}});
+
+    if(!findUser){
+      throw new HttpException('User Not found',HttpStatus.NOT_FOUND)
+    }
+    
+    return findUser
+
   }
 
 
