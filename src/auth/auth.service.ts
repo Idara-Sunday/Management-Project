@@ -208,7 +208,10 @@ export class AuthService {
       user      
     });
 
-    return await this.profileRepo.save(userProfile)
+    // return await this.profileRepo.save(userProfile)
+    const saveProfile = await this.profileRepo.save(userProfile);
+    saveProfile.user.userReturn();
+    return saveProfile;
 
   }catch(error){
     return error
