@@ -41,9 +41,18 @@ export class CommentsService {
       products
       
     }); 
-  return await this.commentRepo.save(comment)
+  // return await this.commentRepo.save(comment)
+  const saveComment = await this.commentRepo.save(comment);
+   delete saveComment.user.blocked
+   delete saveComment.user.password
+   delete saveComment.user.role
+   delete saveComment.user.id
+   delete saveComment.user.created_At
+   delete saveComment.user.updated_At
+   return saveComment
 
   // ********* OR *******
+
   /*
   const comment = this.commentRepo.create({
     ...createCommentDto,
@@ -56,7 +65,7 @@ export class CommentsService {
     findProduct.comments.push(saveComment)
     await this.productRepo.save(findProduct)
     return{ 
-      findProduct
+      findProduct 
     }            
     */
 // ******** ENDS HERE*********    

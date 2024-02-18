@@ -173,7 +173,6 @@ export class AuthService {
 
     user.blocked = false;
 
-    // return await this.authRepo.save(user);
     const saveUser = await this.authRepo.save(user);
     return saveUser.userReturn();
   }
@@ -213,6 +212,8 @@ export class AuthService {
   delete saveProfile.user.password
   delete saveProfile.user.created_At
   delete saveProfile.user.blocked
+  delete saveProfile.user.id
+  delete saveProfile.user.updated_At
   return saveProfile
 
   }catch(error){
