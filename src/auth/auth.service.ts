@@ -208,10 +208,12 @@ export class AuthService {
       user      
     });
 
-    // return await this.profileRepo.save(userProfile)
-    const saveProfile = await this.profileRepo.save(userProfile);
-    saveProfile.user.userReturn();
-    return saveProfile;
+    
+  const saveProfile = await this.profileRepo.save(userProfile);
+  delete saveProfile.user.password
+  delete saveProfile.user.created_At
+  delete saveProfile.user.blocked
+  return saveProfile
 
   }catch(error){
     return error
