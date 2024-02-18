@@ -41,7 +41,6 @@ export class CommentsService {
       products
       
     }); 
-  // return await this.commentRepo.save(comment)
   const saveComment = await this.commentRepo.save(comment);
    delete saveComment.user.blocked
    delete saveComment.user.password
