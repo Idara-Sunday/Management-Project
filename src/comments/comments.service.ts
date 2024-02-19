@@ -218,8 +218,16 @@ export class CommentsService {
   }
 
   async findAllcomments(){
-    const findcomments = await this.commentRepo.find({relations:['user']});
-    return findcomments
+      const findComments = await this.commentRepo.find({relations:['user']});
+      findComments.map((user)=>{
+      delete user.user.role,
+      delete user.user.password,
+      delete user.user.id,
+      delete user.user.blocked
+    });  
+    
+    return findComments;
+    
   }
 
   
