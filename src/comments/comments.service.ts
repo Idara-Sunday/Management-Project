@@ -150,11 +150,12 @@ export class CommentsService {
     const userWhoMadeCommentId = userWhoMadeComment['id'];
 
     if(userId !== userWhoMadeCommentId){
-      throw new HttpException('you cant edit this comment',HttpStatus.BAD_REQUEST)
+      throw new HttpException('you cant edit this comment',HttpStatus.BAD_REQUEST);
     }
     
-    return await this.commentRepo.update(commentId,payload)
-
+    await this.commentRepo.update(commentId,payload);
+    return payload
+    
   }
 
 
@@ -219,6 +220,7 @@ export class CommentsService {
 
   async findAllcomments(){
       const findComments = await this.commentRepo.find({relations:['user']});
+
       findComments.map((user)=>{
       delete user.user.role,
       delete user.user.password,
