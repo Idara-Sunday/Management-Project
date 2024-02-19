@@ -218,7 +218,7 @@ export class CommentsService {
   }
 
   async findAllcomments(){
-    const findcomments = await this.commentRepo.find({relations:['user']})
+    const findcomments = await this.commentRepo.find({relations:['user']});
     return findcomments
   }
 
@@ -228,7 +228,14 @@ export class CommentsService {
     if(!findOneComment){
       throw new HttpException('No comment Found',404);
     }
+    delete findOneComment.user.password
+    delete findOneComment.user.blocked
+    delete findOneComment.user.id
+    delete findOneComment.user.updated_At
+    delete findOneComment.user.created_At
+
     return findOneComment;
+    
   }
 
  
