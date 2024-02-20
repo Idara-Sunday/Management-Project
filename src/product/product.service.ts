@@ -18,10 +18,17 @@ export class ProductService {
   const createProduct =  this.prodRepo.create({
     ...payload,
     user
-  })
-  return await this.prodRepo.save(createProduct)
+  });
+  // return await this.prodRepo.save(createProduct)
+  const saveProduct = await this.prodRepo.save(createProduct);
 
-    
+  saveProduct.user.blocked
+  saveProduct.user.password
+  saveProduct.user.updated_At
+  saveProduct.user.id
+  
+  return saveProduct
+
   }
     
 
