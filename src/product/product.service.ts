@@ -99,6 +99,13 @@ export class ProductService {
 
   async findAll() {
     const allUsers = await this.prodRepo.find({relations:['user','comments']});
+    allUsers.map((users)=>{
+      delete users.user.blocked
+      delete users.user.password
+      delete users.user.role
+      delete users.user.updated_At
+      delete users.user.created_At
+    })
      return allUsers
   } 
 
