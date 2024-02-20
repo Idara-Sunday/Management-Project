@@ -22,10 +22,10 @@ export class ProductService {
   // return await this.prodRepo.save(createProduct)
   const saveProduct = await this.prodRepo.save(createProduct);
 
-  saveProduct.user.blocked
-  saveProduct.user.password
-  saveProduct.user.updated_At
-  saveProduct.user.id
+  delete saveProduct.user.blocked
+  delete saveProduct.user.password
+  delete saveProduct.user.updated_At
+  delete saveProduct.user.id
   
   return saveProduct
 
