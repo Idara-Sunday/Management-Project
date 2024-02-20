@@ -98,14 +98,14 @@ export class ProductService {
 
 
   async findAll() {
-    const allUsers = await this.prodRepo.find({relations:['user','comments','comments.user']});
+    const allUsers = await this.prodRepo.find({relations:['user','comments.user']});
     allUsers.map((products)=>{
       delete products.user.blocked
       delete products.user.password
       delete products.user.role
       delete products.user.updated_At
       delete products.user.created_At
-      
+
       products.comments.map((comment)=>{
         delete comment.user.password
         delete comment.user.blocked
@@ -123,11 +123,21 @@ export class ProductService {
 
   async findOne(productID:number) {
     // return await this.prodRepo.findOne({where:{productID},relations:['comments']});
-    const findProduct = await this.prodRepo.findOne({where:{productID},relations:['comments']});
+    const findProduct = await this.prodRepo.findOne({where:{productID},relations:['comments.user']});
     if(!findProduct){
       throw new HttpException('Product Not Found',404);
     }
+
+    findProduct.comments.map((comment)=>{
+      delete comment.user.blocked
+      delete comment.user.password
+      delete comment.user.created_At
+      delete comment.user.updated_At
+      delete comment.user.role
+    })
+
     return findProduct
+
   }
 
  
