@@ -45,8 +45,5 @@ export class CommentsController {
   }
  
 
-  @Delete(':id')
-  remove(@Param('id') id: number) {   
-    return this.commentsService.remove(+id);
-  }
+
 }
