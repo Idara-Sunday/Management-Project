@@ -37,7 +37,7 @@ export class User extends Base{
     comments:Comment[];
     
  
-    userReturn (){
+    async userReturn (){
         const {password, blocked, role ,id, created_At,updated_At, ...rest} = this
         return rest
      }
